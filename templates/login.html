@@ -32,8 +32,8 @@
         // 쿠키가 있기 때문에, 한번 로그인하면 네이버에서 다시 로그인할 필요가 없는 것입니다.
         // 브라우저를 닫으면 자동 삭제되게 하거나, 일정 시간이 지나면 삭제되게 할 수 있습니다.
         function login() {
-            let username = $("#userid").val();
-            let password = $("#userpw").val();
+            let username = $("#id").val();
+            let password = $("#pw").val();
 
             if (username == "") {
                 $(".id_box").addClass("error");
@@ -53,7 +53,7 @@
             $.ajax({
                 type: "POST",
                 url: "/api/login",
-                data: {id_give: $('#userid').val(), pw_give: $('#userpw').val()},
+                data: {id_give: $('#id').val(), pw_give: $('#pw').val()},
                 success: function (response) {
                     if (response['result'] == 'success') {
                         // 로그인이 정상적으로 되면, 토큰을 받아옵니다.
@@ -74,26 +74,26 @@
 
 </head>
 <body>
-<div class="login_wrap">
-    <a onclick="to_main()" href="javascript:void(0);"><h1 class="logo"><img src="../static/logo.png" alt="logo"></h1>
-    </a>
-    <div class="login_box point_back_color">
-        <div class="form-group id_box">
-            <label class="white_color font_13" for="userid">아이디</label>
-            <input type="text" class="form-control" id="userid" placeholder="아이디를 입력해주세요.">
-            <span class="alert_msg id_msg"><i><img src="./static/bang_icon.png" alt="유효성오류"></i>아이디를 입력하세요!</span>
+    <div class="login_wrap">
+        <a onclick="to_main()" href="javascript:void(0);"><h1 class="logo"><img src="../static/logo.png" alt="logo"></h1>
+        </a>
+        <div class="login_box point_back_color">
+            <div class="form-group id_box">
+                <label class="white_color font_13" for="id">아이디</label>
+                <input type="text" class="form-control" id="id" placeholder="아이디를 입력해주세요.">
+                <span class="alert_msg id_msg"><i><img src="./static/bang_icon.png" alt="유효성오류"></i>아이디를 입력하세요!</span>
+            </div>
+            <div class="form-group pw_box">
+                <label class="white_color font_13" for="pw">비밀번호</label>
+                <input type="password" class="form-control" id="pw" placeholder="비밀번호를 입력해주세요.">
+                <span class="alert_msg pw_msg"><i><img src="./static/bang_icon.png" alt="유효성오류"></i>비밀번호를 입력하세요!</span>
+            </div>
         </div>
-        <div class="form-group pw_box">
-            <label class="white_color font_13" for="userpw">비밀번호</label>
-            <input type="password" class="form-control" id="userpw" placeholder="비밀번호를 입력해주세요.">
-            <span class="alert_msg pw_msg"><i><img src="./static/bang_icon.png" alt="유효성오류"></i>비밀번호를 입력하세요!</span>
+        <button onclick="login()" type="button" class="btn login_button">로그인</button>
+        <div class="signup_box">
+            <p class="dark_gray_color font_13">아이디가 없으신가요?</p>
+            <a class="signup" href="/addUser">회원가입</a>
         </div>
     </div>
-    <button onclick="login()" type="button" class="btn login_button">로그인</button>
-    <div class="signup_box">
-        <p class="dark_gray_color font_13">아이디가 없으신가요?</p>
-        <a class="signup" href="/register">회원가입</a>
-    </div>
-</div>
 </body>
 </html>
