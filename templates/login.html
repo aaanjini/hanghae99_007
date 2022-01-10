@@ -32,22 +32,22 @@
         // 쿠키가 있기 때문에, 한번 로그인하면 네이버에서 다시 로그인할 필요가 없는 것입니다.
         // 브라우저를 닫으면 자동 삭제되게 하거나, 일정 시간이 지나면 삭제되게 할 수 있습니다.
         function login() {
-            let username = $("#id").val();
-            let password = $("#pw").val();
+            let username = $("#id").val(); //사용자가 input에 입력한 id값을 가져옵니다.
+            let password = $("#pw").val(); //사용자가 input에 입력한 pw값을 가져옵니다.
 
-            if (username == "") {
+            if (username == "") { // id값이 빈값일 경우 .id_box에 'error'클래스를 추가하고 input을 focus 합니다.
                 $(".id_box").addClass("error");
                 $("#id").focus();
                 return;
-            } else {
+            } else { // 빈값이 아닐 경우 .id_box에 'error'클래스를 지웁니다.
                 $(".id_box").removeClass("error");
             }
 
-            if (password == "") {
+            if (password == "") { // pw값이 빈값일 경우 .pw_box에 'error'클래스를 추가하고 input을 focus 합니다.
                 $(".pw_box").addClass("error");
                 $("#pw").focus();
                 return;
-            } else {
+            } else { // 빈값이 아닐 경우 .pw_box에 'error'클래스를 지웁니다.
                 $(".pw_box").removeClass("error");
             }
             $.ajax({
@@ -60,7 +60,7 @@
                         // 이 토큰을 mytoken이라는 키 값으로 쿠키에 저장합니다.
                         $.cookie('mytoken', response['token']);
 
-                        alert('로그인 완료!')
+                        alert('로그인 완료!') // 로그인이 완료되면 /(index.html -메인페이지)로 이동합니다.
                         window.location.href = '/'
                     } else {
                         // 로그인이 안되면 에러메시지를 띄웁니다.

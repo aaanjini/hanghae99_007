@@ -22,15 +22,13 @@ import datetime
 import hashlib
 
 
-#################################
-##  HTML을 주는 부분             ##
-#################################
+
 @app.route('/')
 def home():
-    token_receive = request.cookies.get('mytoken')
+    token_receive = request.cookies.get('mytoken') #사용자의 토큰을 받아옵니다.
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        user_info = db.user.find_one({"id": payload['id']})
+        user_info = db.user.find_one({"id": payload['id']}) #받아온 토큰으로 유저의 정보를 가져옵니다
         return render_template('index.html', nickname=user_info["nick"])
     except jwt.ExpiredSignatureError:
         return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
@@ -49,32 +47,29 @@ def addUser():
     return render_template('addUser.html')
 
 
-#################################
-##  로그인을 위한 API            ##
-#################################
 
 # [회원가입 API]
-# id, pw, nickname을 받아서, mongoDB에 저장합니다.
-# 저장하기 전에, pw를 sha256 방법(=단방향 암호화. 풀어볼 수 없음)으로 암호화해서 저장합니다.
+
+
 @app.route('/api/addUser', methods=['POST'])
 def api_register():
-    id_receive = request.form['id_give']
-    pw_receive = request.form['pw_give']
-    nickname_receive = request.form['nickname_give']
+    id_receive = request.form['id_give'] #사용자단에서 넘겨받은 id값
+    pw_receive = request.form['pw_give'] #사용자단에서 넘겨받은 pw값
+    nickname_receive = request.form['nickname_give'] #사용자단에서 넘겨받은 nickname값
 
-    pw_hash = hashlib.sha256(pw_receive.encode('utf-8')).hexdigest()
+    pw_hash = hashlib.sha256(pw_receive.encode('utf-8')).hexdigest() # 저장하기 전에, pw를 sha256 방법(=단방향 암호화. 풀어볼 수 없음)으로 암호화해서 저장합니다.
 
     db.user.insert_one({'id': id_receive, 'pw': pw_hash, 'nick': nickname_receive})
+    # id, pw(암호회된), nickname을 받아서, mongoDB에 저장합니다.
 
     return jsonify({'result': 'success'})
 
 
 # [로그인 API]
-# id, pw를 받아서 맞춰보고, 토큰을 만들어 발급합니다.
 @app.route('/api/login', methods=['POST'])
 def api_login():
-    id_receive = request.form['id_give']
-    pw_receive = request.form['pw_give']
+    id_receive = request.form['id_give'] #사용자단에서 넘겨받은 id값
+    pw_receive = request.form['pw_give'] #사용자단에서 넘겨받은 id값
 
     # 회원가입 때와 같은 방법으로 pw를 암호화합니다.
     pw_hash = hashlib.sha256(pw_receive.encode('utf-8')).hexdigest()
@@ -90,7 +85,7 @@ def api_login():
         # exp에는 만료시간을 넣어줍니다. 만료시간이 지나면, 시크릿키로 토큰을 풀 때 만료되었다고 에러가 납니다.
         payload = {
             'id': id_receive,
-            'exp': datetime.datetime.utcnow() + datetime.timedelta(seconds=5)
+            'exp': datetime.datetime.utcnow() + datetime.timedelta(seconds=5) #로그인 한 지 5초가 지나면 토큰 만료
         }
         token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
 
