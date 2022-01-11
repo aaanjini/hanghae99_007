@@ -1,0 +1,42 @@
+.wrap {
+    width: 1000px;
+    margin: 0 auto;
+}
+
+.header {
+    text-align: center;
+}
+
+.right {
+    float: right;
+}
+
+.navi {
+    text-align: right;
+    background-color: #F4F3F3;
+    border-bottom: #E6E6E6 1px solid;
+    height: 30px;
+}
+
+#cards-box {
+    display: flex;
+    justify-content: space-between;
+    margin: 0 70px;
+    margin-top: 65px;
+    flex-wrap: wrap;
+
+}
+
+.orange_back {
+    background-color: #F2CB61
+}
+
+.card_image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 20px 0 0 20px;
+}
+.card{
+    border-radius: 20px;
+}
