@@ -1,0 +1,45 @@
+.form-control {
+    border: none;
+}
+
+input::placeholder {
+    font-size: 14px;
+    color: #ddd;
+    opacity: 0.5;
+}
+/*크롬 placeholder 색상변경*/
+::-webkit-input-placeholder {
+    color: #eee;
+}
+
+/*font&color----------------------*/
+
+.point_color {
+    color: #f2cb61;
+}
+.point_back_color {
+    background-color: #f2cb61;
+}
+.white_color {
+    color: white;
+}
+.gray_color {
+    color: #eee;
+}
+.dark_gray_color {
+    color: #333;
+}
+
+.font_13 {
+    font-size: 13px;
+}
+.font_15 {
+    font-size: 15px;
+}
+
+/*margin&padding---------*/
+
+.mb20 {
+    margin-bottom: 20px;
+}
+

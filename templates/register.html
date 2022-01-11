@@ -1,88 +1,180 @@
-<!doctype html>
-<html lang="en">
-    <head>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-        <!-- Webpage Title -->
-        <title>Hello, world!</title>
+    <!-- Bulma CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
-        <!-- Required meta tags -->
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
 
-        <!-- Bulma CSS -->
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
-        <!-- JS -->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+    <!--  css 파일 분리  -->
+    <link rel="stylesheet" type="text/css" href="../static/common.css">
+    <link rel="stylesheet" type="text/css" href="../static/register.css">
 
-        <script>
-            // 간단한 회원가입 함수입니다.
-            // 아이디, 비밀번호, 닉네임을 받아 DB에 저장합니다.
-            function register() {
-                $.ajax({
-                    type: "POST",
-                    url: "/api/addUser",
-                    data: {
-                        id_give: $('#id').val(),
-                        pw_give: $('#pw').val(),
-                        nickname_give: $('#nickname').val()
-                    },
-                    success: function (response) {
-                        if (response['result'] == 'success') {
-                            alert('회원가입이 완료되었습니다.')
-                            window.location.href = '/login'
-                        } else {
-                            alert(response['msg'])
-                        }
-                    }
-                })
+    <!-- Webpage Title -->
+    <title>SIGNUP | 겨울붕어</title>
+
+
+    <!--  ///////////////////////// JavaScript ////////////////////////// -->
+    <script type="text/javascript">
+
+        $(function () {
+            // 1. $(tagName) : 2.(#id) : 3.$(.className)
+            $("button.signup_btn").on("click", function () {
+                addUser();
+            });
+        });
+
+        {#$(document).ready(function(){#}
+        {#    // 1. $(tagName) : 2.(#id) : 3.$(.className)#}
+        {#    $(".signup_btn").on("click", function () {#}
+        {#        addUser();#}
+        {#    });#}
+
+            // 1. $(tagName) : 2.(#id) : 3.$(.className)
+            $(".check_btn").on("click", function () {
+                console.log("good")
+                addUser();//이걸 유효성검사로
+            });
+
+            # 아이디값 입력 시 중복확인 버튼 활성화 #
+            $('#id').on('input',function(){
+               if ($('#id').val()==''){
+                   $('.check_btn').attr("disabled",true);
+                   $('.check_btn').removeClass('on');
+               } else {
+                   $('.check_btn').attr("disabled",false);
+                   $('.check_btn').addClass('on');
+               }
+            });
+
+        });
+
+
+        function to_main () {
+            window.location.href = '/'
+        }
+
+
+        function addUser() {
+
+            let id = $("input[name='id']").val();
+            let pw = $("input[name='pw']").val();
+            let nickname = $("input[name='nickname']").val();
+
+            //let photo=$("input[name='profilePhoto']").val();
+
+
+            if (id == null || id.length < 1) {
+                alert("아이디는 반드시 입력하셔야 합니다.");
+                return;
             }
 
-        </script>
-    </head>
-    <body>
-        <div class="section has-text-centered">
-            <h1 class="title">회원가입 페이지</h1>
-            <div class="container" style="width:60%">
-                <div class="field is-horizontal">
-                    <div class="field-label is-normal">
-                        <label class="label" for="id">ID</label>
-                    </div>
-                    <div class="field-body">
-                        <div class="field">
-                            <div class="control">
-                                <input type="text" class="input" id="id" aria-describedby="emailHelp"
-                                       placeholder="My ID">
-                            </div>
-                        </div>
+            if (pw == null || pw.length < 1) {
+                alert("패스워드는  반드시 입력하셔야 합니다.");
+                return;
+            }
+
+
+            if (nickname == null || nickname.length < 2) {
+                alert("닉네임은  반드시 두 자 이상 입력하셔야 합니다.");
+                return;
+            }
+
+
+            $.ajax({
+                type: "POST",
+                url: "/addUser",
+                data: {id: id, pw: pw, nickname: nickname},
+                success: function (response) {
+                    alert(response["msg:가입완료!"]);
+                    window.location.href = '/';
+                }
+            })
+        }
+
+        {#function check_dup() {#}
+        {#    let id = $("input[name='id']").val();#}
+        {#    console.log(id)#}
+        {#    if (id == "") {#}
+        {#        $("#help-id").text("아이디를 입력해주세요.").removeClass("is-safe").addClass("is-danger")#}
+        {#        $("#input-username").focus()#}
+        {#        return;#}
+        {#    }#}
+        {#    if (!is_nickname(username)) {#}
+        {#        $("#help-id").text("아이디의 형식을 확인해주세요. 영문과 숫자, 일부 특수문자(._-) 사용 가능. 2-10자 길이").removeClass("is-safe").addClass("is-danger")#}
+        {#        $("#input-username").focus()#}
+        {#        return;#}
+        {#    }#}
+        {#    $("#help-id").addClass("is-loading")//유효성검사#}
+        {#    $.ajax({#}
+        {#        type: "POST",#}
+        {#        url: "/sign_up/check_dup",#}
+        {#        data: {#}
+        {#            username_give: username#}
+        {#        },#}
+        {#        success: function (response) {#}
+        {##}
+        {#            if (response["exists"]) {#}
+        {#                $("#help-id").text("이미 존재하는 아이디입니다.").removeClass("is-safe").addClass("is-danger")#}
+        {#                $("#input-username").focus()#}
+        {#            } else {#}
+        {#                $("#help-id").text("사용할 수 있는 아이디입니다.").removeClass("is-danger").addClass("is-success")#}
+        {#            }#}
+        {#            $("#help-id").removeClass("is-loading")#}
+        {##}
+        {#        }#}
+        {#    });#}
+        {#}#}
+
+
+        function is_nickname(asValue) {
+            var regExp = /^(?=.*[a-zA-Z])[-a-zA-Z0-9_.]{2,10}$/;//소괄호:필수포함, 숫자:2~10자사이
+            return regExp.test(asValue);
+        }
+
+        function is_password(asValue) {
+            var regExp = /^(?=.*\d)(?=.*[a-zA-Z])[0-9a-zA-Z!@#$%^&*]{8,20}$/;
+            return regExp.test(asValue);
+        }
+    </script>
+
+
+</head>
+<body>
+    <div class="register_wrap">
+        {#   로고 클릭 시 메인화면으로 이동     #}
+        <a onclick="to_main()" href="javascript:void(0);"><h1 class="logo"><img src="../static/logo.png" alt="logo"></h1></a>
+        <h3 class="text-center">회원가입</h3>
+        <h6 class="text-center font_15 dark_gray_color mb20">정보를 입력해주세요</h6>
+        <form class="">
+            <div class="register_box point_back_color">
+
+                <div class="form-group">
+                    <label for="id" class="white_color font_13">아이디</label>
+                    <div class="form-inline double_input">
+                        <input type="text" class="form-control" placeholder="아이디를 입력하세요." name="id" id="id">
+                        <button class="btn check_btn font_13" type="submit">아이디 중복 확인</button>
                     </div>
                 </div>
-                <div class="field is-horizontal">
-                    <div class="field-label is-normal">
-                        <label class="label" for="pw">PW</label>
-                    </div>
-                    <div class="field-body">
-                        <div class="field">
-                            <div class="control">
-                                <input type="password" class="input" id="pw" placeholder="My Password">
-                            </div>
-                        </div>
-                    </div>
+                <div class="form-group">
+                    <label for="pw" class="white_color font_13">비밀번호</label>
+                    <input type="password" class="form-control" placeholder="비밀번호를 입력하세요." name="pw" id="pw">
                 </div>
-                <div class="field is-horizontal">
-                    <div class="field-label is-normal">
-                        <label class="label" for="nickname">NICKNAME</label>
-                    </div>
-                    <div class="field-body">
-                        <div class="field">
-                            <div class="control">
-                                <input type="text" class="input" id="nickname" placeholder="My Nickname">
-                            </div>
-                        </div>
-                    </div>
+                <div class="form-group">
+                    <label for="nickname" class="white_color font_13">닉네임</label>
+                    <input type="text" class="form-control" placeholder="닉네임을 입력하세요." name="nickname" id="nickname">
                 </div>
-                <button class="button is-primary" onclick="register()">회원가입</button>
             </div>
-        </div>
-    </body>
-</html>
+            <button class="btn signup_btn" type="submit">가입하기</button>
+        </form>
+    </div>
+</body>

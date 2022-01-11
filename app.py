@@ -4,7 +4,8 @@ app = Flask(__name__)
 
 from pymongo import MongoClient
 
-client = MongoClient('mongodb://52.79.38.21', 27017, username="test", password="test")
+# client = MongoClient('mongodb://52.79.38.21', 27017, username="test", password="test")
+client = MongoClient('localhost', 27017)
 db = client.hanghae99_007
 
 # JWT 토큰을 만들 때 필요한 비밀문자열입니다. 아무거나 입력해도 괜찮습니다.
@@ -43,26 +44,35 @@ def login():
 
 
 @app.route('/register')
-def addUser():
-    return render_template('addUser.html')
+def register():
+    return render_template('register.html')
 
 
 
 # [회원가입 API]
 
 
-@app.route('/api/addUser', methods=['POST'])
-def api_register():
-    id_receive = request.form['id_give'] #사용자단에서 넘겨받은 id값
-    pw_receive = request.form['pw_give'] #사용자단에서 넘겨받은 pw값
-    nickname_receive = request.form['nickname_give'] #사용자단에서 넘겨받은 nickname값
+@app.route("/addUser", methods=["POST"])
+def addUser():
+    return render_template('register.html')
 
-    pw_hash = hashlib.sha256(pw_receive.encode('utf-8')).hexdigest() # 저장하기 전에, pw를 sha256 방법(=단방향 암호화. 풀어볼 수 없음)으로 암호화해서 저장합니다.
 
-    db.user.insert_one({'id': id_receive, 'pw': pw_hash, 'nick': nickname_receive})
-    # id, pw(암호회된), nickname을 받아서, mongoDB에 저장합니다.
+    id = request.form['id']
+    pw = request.form['pw']
+    nickname = request.form['nickname']
 
-    return jsonify({'result': 'success'})
+    if (id == "" or pw == "" or nickname == ""):
+        return jsonify({'result': 'fail', 'msg': 'please check input'});
+    doc = {
+        'id': id,
+        'pw': pw,
+        'nickname': nickname,
+
+    }
+    db.user.insert_one(doc);
+    return jsonify({'msg': "입력."});
+
+
 
 
 # [로그인 API]

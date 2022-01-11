@@ -1,9 +1,6 @@
 <!doctype html>
-<html lang="en">
+<html lang="ko">
 <head>
-
-    <!-- Webpage Title -->
-    <title>LOGIN | 겨울붕어</title>
 
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -20,7 +17,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
 
     <!--  css 파일 분리  -->
+    <link rel="stylesheet" type="text/css" href="../static/common.css">
     <link rel="stylesheet" type="text/css" href="../static/login.css">
+
+    <!-- Webpage Title -->
+    <title>LOGIN | 겨울붕어</title>
 
     <script>
         {% if msg %}
@@ -74,7 +75,6 @@
 
 </head>
 <body>
-    {# 마스터 테스트중입니다 겨울붕어 테스트 중  #}
     <div class="login_wrap">
         <a onclick="to_main()" href="javascript:void(0);"><h1 class="logo"><img src="../static/logo.png" alt="logo"></h1>
         </a>
@@ -93,8 +93,9 @@
         <button onclick="login()" type="button" class="btn login_button">로그인</button>
         <div class="signup_box">
             <p class="dark_gray_color font_13">아이디가 없으신가요?</p>
-            <a class="signup" href="/addUser">회원가입</a>
+            <a class="signup" href="/register">회원가입</a>
         </div>
     </div>
+    {# 브랜치 테스트용 #}
 </body>
 </html>
