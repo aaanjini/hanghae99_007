@@ -5,8 +5,10 @@ app = Flask(__name__)
 
 from pymongo import MongoClient
 
-client = MongoClient('mongodb://52.79.38.21', 27017, username="test", password="test")
+client = MongoClient('localhost', 27017)
+
 db = client.hanghae99_007
+
 
 SECRET_KEY = 'SPARTA'
 
@@ -17,18 +19,9 @@ from datetime import datetime, timedelta
 import hashlib
 
 # 페이지 접속-----------------------------
-@app.route('/')
+@app.route('/', methods=['GET'])
 def home():
-    token_receive = request.cookies.get('mytoken') #사용자의 토큰을 받아옵니다.
-    try:
-        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        user_info = db.user.find_one({"id": payload['id']}) #받아온 토큰으로 유저의 정보를 가져옵니다
-        return render_template('index.html', nickname=user_info["nick"])
-    except jwt.ExpiredSignatureError:
-        return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
-    except jwt.exceptions.DecodeError:
-        return redirect(url_for("login", msg="로그인 정보가 존재하지 않습니다."))
-
+    return render_template('index.html')
 
 @app.route('/login')
 def login():
@@ -46,33 +39,31 @@ def post():
 # 회원가입-------------------------------
 @app.route("/addUser", methods=["POST"])
 def addUser():
-    return jsonify({'result': 'success'})
+
+    id = request.form['id']
+    pw = request.form['pw']
+    nickname = request.form['nickname']
+
+    if (id == "" or pw == "" or nickname == ""):
+        return jsonify({'result': 'fail', 'msg': 'please check input'});
+    doc = {
+        'id': id,
+        'pw': pw,
+        'nickname': nickname,
+
+    }
+    db.user.insert_one(doc);
+    return jsonify({'msg': "입력."});
 
 
 @app.route('/sign_up/check_dup', methods=['POST'])
 def check_dup():
-    return jsonify({'result': 'success'})
+    id = request.form['id']
+    exists = bool(db.user.find_one({"id": id}))
+    return jsonify({'result': 'success', 'exists': exists})
 
 
 # 로그인--------------------------------
-
-#임시회원가입 코드-----------------------------
-
-@app.route('/api/addUser', methods=['POST'])
-def api_register():
-    id_receive = request.form['id_give'] #사용자단에서 넘겨받은 id값
-    pw_receive = request.form['pw_give'] #사용자단에서 넘겨받은 pw값
-    nickname_receive = request.form['nickname_give'] #사용자단에서 넘겨받은 nickname값
-
-    pw_hash = hashlib.sha256(pw_receive.encode('utf-8')).hexdigest() # 저장하기 전에, pw를 sha256 방법(=단방향 암호화. 풀어볼 수 없음)으로 암호화해서 저장합니다.
-
-    db.user.insert_one({'id': id_receive, 'pw': pw_hash, 'nick': nickname_receive})
-    # id, pw(암호회된), nickname을 받아서, mongoDB에 저장합니다.
-
-    return jsonify({'result': 'success'})
-
-#-----------------------------------------//
-
 @app.route('/api/login', methods=['POST'])
 def api_login():
     id_receive = request.form['id_give'] #사용자단에서 넘겨받은 id값
@@ -143,6 +134,9 @@ def delete_star():
 
 
 # 작성페이지---------------------------------
+
+
+
 
 
 if __name__ == '__main__':
