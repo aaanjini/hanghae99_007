@@ -35,8 +35,28 @@
     width: 100%;
     height: 200px;
     object-fit: cover;
-    border-radius: 20px 0 0 20px;
 }
-.card{
-    border-radius: 20px;
+
+.ca{
+    background: white;
+    border : 1px solid #BDBDBD;
+    margin-bottom: 20px;
+}
+
+.card_body{
+    padding : 10px;
+}
+.ptag{
+    border-top : 1px solid #D8D8D8;
+    border-bottom : 1px solid #D8D8D8;
+    padding : 5px 0 5px 0;
+    margin-top:5px;
+    margin-bottom:5px;
+    word-wrap: break-word;
+
+    white-space: normal;
+    display: -webkit-box;
+    -webkit-line-clamp: 5;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }

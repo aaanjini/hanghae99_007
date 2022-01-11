@@ -35,6 +35,19 @@
             });
         }
 
+        function canclelike(id) {
+            $.ajax({
+                type: 'POST',
+                url: '/canclelike',
+                data: {post_id: id},
+                success: function (response) {
+                    alert(response['msg'])
+                    window.location.href='/';
+                }
+            });
+
+        }
+
         function del(id) {
             if (confirm('정말로 삭제하시겠습니까?')) {
                 $.ajax({
@@ -43,7 +56,7 @@
                     data: {post_id: id},
                     success: function (response) {
                         alert(response['msg'])
-                        window.location.reload()
+                        window.location.href='/login'
                     }
                 });
             } else {
@@ -51,94 +64,69 @@
             }
 
         }
-
-        $(document).ready(function () {
-            $('#container').BlocksIt();
-            numOfCol:4
-        });
     </script>
 </head>
 <body>
 <div class="navi">
-    <a href="#">로그인</a>
-    <a href="#">회원가입</a>
+    {% if nickname != null %}
+        <div class="row">
+            <div class="col" style="text-align: left">
+                <span>{{ nickname }}님 환영합니다!</span>
+            </div>
+            <div class="col">
+                <a href="#">게시물 작성</a>
+                <a href="login">로그아웃</a>
+            </div>
+        </div>
+    {% else %}
+        <a href="login">로그인</a>
+        <a href="register">회원가입</a>
+    {% endif %}
 </div>
 <div class="header">
     <img src="/static/image/bunga.png" width="300px">
     <h1>겨울붕어</h1>
 </div>
-<header class="header">
-    <div style="text-align: center">
-
-    </div>
-</header>
 <div class="orange_back">
-    <div class="wrap" id="cards" style="padding-top: 20px;">
-        {% for post in posts %}
-        <div class="card mb-3">
-            <div class="row g-0">
-                <div class="col-md-4">
-                    <img src="{{post.img_url}}" class="card_image" alt="...">
-                </div>
-                <div class="col-md-8">
-                    <div class="card-body">
+    <div class="wrap" style="padding-top: 20px;">
+        <div class="row row-cols-3">
+            {% for post in posts %}
+                <div class="col">
+                    <div class="ca">
                         <div>
-                            <h4 class="card-title" style="margin: 0">{{post.title}}</h4>
-                            {{post.nickname}}
+                            <img class="card_image" src="{{ post.img_url }}">
                         </div>
-                        <h5 class="card-text" style="margin-top: 10px">{{post.review}}</h5>
-                        <p class="card-text" style="margin-bottom: 5px">{{post.address}}</p>
-                        <span>
-                        ❤ {{post.like_count}}
-                    </span>
-                        <span class="right">
-                        <button type="button" onclick="like('{{ post._id }}')" class="btn btn-primary">좋아요!</button>
-                        <button type="button" onclick="del('{{ post._id }}')" class="btn btn-danger">삭제</button>
-                    </span>
+                        <div class="card_body">
+                            <h4 style="margin: 0">{{ post.title }}</h4>
+                            <small>{{ post.nickname }}</small>
+                            <p class="ptag">{{ post.review }}daspkfoasjdoiasjfoiasjoaisjdfoiasjdoasjfiasjodjaisdjasdjiasjfoadaspkfoasjdoiasjfoiasjoaisjdfoiasjdoasjfiasjodjaisdjasdjiasjfodaspkfoasjdoiasjfoiasjoaisjdfoiasjdoasjfiasjodjaisdjasdjiasjfosijdsaiodjisadaiosdjasoij</p>
+                            <small>{{ post.address }}</small>
+                            <div class="row">
+                                <Div class="col">
+                                    <span style="vertical-align: -1px">{{ post.like }}</span>
+                                    {% if post.like_count == 0 %}
+                                        <img type="button" id="like" onclick="like('{{ post._id }}')"
+                                             src="/static/image/heart.svg"></button>
+                                    {% else %}
+                                        <img type="button" id="unlike" onclick="canclelike('{{ post._id }}')"
+                                             src="/static/image/heart-fill.svg"></button>
+                                    {% endif %}
+                                </Div>
+                                <div class="col" style="text-align: right">
+                                    {% if nickname == post.nickname %}
+                                        <img type="button" onclick="del('{{ post._id }}')" src="/static/image/x.svg">
+                                        </button>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
-            </div>
-        </div>
-        {% endfor %}
-    </div>
-
-    <div class="container">
-        <div class="row row-cols-3">
-            <div class="col" style="width: 200px; height: 200px">Column</div>
-            <div class="col" style="width: 200px; height: 200px">Column</div>
-<div class="col" style="width: 200px; height: 200px">Column</div>
-<div class="col" style="width: 200px; height: 200px">Column</div>
-<div class="col" style="width: 200px; height: 200px">Column</div>
-<div class="col" style="width: 200px; height: 200px">Column</div>
-<div class="col" style="width: 200px; height: 200px">Column</div>
-<div class="col" style="width: 200px; height: 200px">Column</div>
-<div class="col" style="width: 200px; height: 200px">Column</div>
-<div class="col" style="width: 200px; height: 200px">Column</div>
-<div class="col" style="width: 200px; height: 200px">Column</div>
-
-<div class="col" style="width: 200px; height: 200px">Column</div>
-
-<div class="col" style="width: 200px; height: 200px">Column</div>
-
-<div class="col" style="width: 200px; height: 200px">Column</div>
+            {% endfor %}
         </div>
     </div>
-
-    <div class="container">
-        <div class="row row-cols-3">
-            <div class="col">Column</div>
-            <div class="col">Column</div>
-            <div class="col">Column</div>
-            <div class="col">Column</div>
-            <div class="col">Column</div>
-            <div class="col">Column</div>
-            <div class="col">Column</div>
-            <div class="col">Column</div>
-            <div class="col">Column</div>
-            <div class="col">Column</div>
-        </div>
-    </div>
-
-
+    {#wrap end#}
+</div>
 </body>
 </html>
