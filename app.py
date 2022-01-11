@@ -1,4 +1,5 @@
 from flask import Flask, render_template, jsonify, request, session, redirect, url_for
+from bson.objectid import ObjectId
 
 app = Flask(__name__)
 
@@ -7,22 +8,15 @@ from pymongo import MongoClient
 client = MongoClient('mongodb://52.79.38.21', 27017, username="test", password="test")
 db = client.hanghae99_007
 
-# JWT 토큰을 만들 때 필요한 비밀문자열입니다. 아무거나 입력해도 괜찮습니다.
-# 이 문자열은 서버만 알고있기 때문에, 내 서버에서만 토큰을 인코딩(=만들기)/디코딩(=풀기) 할 수 있습니다.
 SECRET_KEY = 'SPARTA'
 
-# JWT 패키지를 사용합니다. (설치해야할 패키지 이름: PyJWT)
 import jwt
 
-# 토큰에 만료시간을 줘야하기 때문에, datetime 모듈도 사용합니다.
-import datetime
+from datetime import datetime, timedelta
 
-# 회원가입 시엔, 비밀번호를 암호화하여 DB에 저장해두는 게 좋습니다.
-# 그렇지 않으면, 개발자(=나)가 회원들의 비밀번호를 볼 수 있으니까요.^^;
 import hashlib
 
-
-
+# 페이지 접속-----------------------------
 @app.route('/')
 def home():
     token_receive = request.cookies.get('mytoken') #사용자의 토큰을 받아옵니다.
@@ -41,15 +35,28 @@ def login():
     msg = request.args.get("msg")
     return render_template('login.html', msg=msg)
 
-
 @app.route('/register')
+def register():
+    return render_template('register.html')
+
+@app.route('/post')
+def post():
+    return render_template('post.html')
+
+# 회원가입-------------------------------
+@app.route("/addUser", methods=["POST"])
 def addUser():
-    return render_template('addUser.html')
+    return jsonify({'result': 'success'})
 
 
+@app.route('/sign_up/check_dup', methods=['POST'])
+def check_dup():
+    return jsonify({'result': 'success'})
 
-# [회원가입 API]
 
+# 로그인--------------------------------
+
+#임시회원가입 코드-----------------------------
 
 @app.route('/api/addUser', methods=['POST'])
 def api_register():
@@ -64,8 +71,8 @@ def api_register():
 
     return jsonify({'result': 'success'})
 
+#-----------------------------------------//
 
-# [로그인 API]
 @app.route('/api/login', methods=['POST'])
 def api_login():
     id_receive = request.form['id_give'] #사용자단에서 넘겨받은 id값
@@ -85,7 +92,7 @@ def api_login():
         # exp에는 만료시간을 넣어줍니다. 만료시간이 지나면, 시크릿키로 토큰을 풀 때 만료되었다고 에러가 납니다.
         payload = {
             'id': id_receive,
-            'exp': datetime.datetime.utcnow() + datetime.timedelta(seconds=5) #로그인 한 지 5초가 지나면 토큰 만료
+            'exp': datetime.utcnow() + timedelta(seconds=60 * 60 * 24)  # 로그인 24시간 유지
         }
         token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
 
@@ -95,11 +102,6 @@ def api_login():
     else:
         return jsonify({'result': 'fail', 'msg': '아이디/비밀번호가 일치하지 않습니다.'})
 
-
-# [유저 정보 확인 API]
-# 로그인된 유저만 call 할 수 있는 API입니다.
-# 유효한 토큰을 줘야 올바른 결과를 얻어갈 수 있습니다.
-# (그렇지 않으면 남의 장바구니라든가, 정보를 누구나 볼 수 있겠죠?)
 @app.route('/api/nick', methods=['GET'])
 def api_valid():
     token_receive = request.cookies.get('mytoken')
@@ -122,6 +124,25 @@ def api_valid():
         return jsonify({'result': 'fail', 'msg': '로그인 시간이 만료되었습니다.'})
     except jwt.exceptions.DecodeError:
         return jsonify({'result': 'fail', 'msg': '로그인 정보가 존재하지 않습니다.'})
+
+
+
+# 메인---------------------------------------
+@app.route('/like', methods=['POST'])
+def like_star():
+    return jsonify({'result': 'success'})
+
+@app.route('/canclelike', methods=['POST'])
+def cancle_like():
+    return jsonify({'result': 'success'})
+
+@app.route('/del', methods=['POST'])
+def delete_star():
+    return jsonify({'result': 'success'})
+
+
+
+# 작성페이지---------------------------------
 
 
 if __name__ == '__main__':
