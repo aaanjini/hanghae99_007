@@ -84,7 +84,8 @@ input::placeholder {
 }
 .login_button:hover {
     animation: ease 0.5s;
-    background-color: #f2cb61;
+    background-color: #000;
+    border: 2px solid #000;
     color: white;
 }
 
