@@ -1,0 +1,70 @@
+input::placeholder {
+    font-size: 14px;
+    color: #ddd;
+    opacity: 0.5;
+}
+
+/*btn------------------------*/
+.check_btn {
+    border-radius: 0.25rem;
+    border: none;
+    color: #999;
+    background-color: #eee;
+    height: 38px;
+    width: 110px;
+}
+
+.check_btn.on {
+    color: white;
+    background-color: #FF8000;
+}
+
+/*logo-----------------------*/
+.logo {
+    width: 150px;
+    margin: 0 auto;
+}
+
+.logo img {
+    width: 100%;
+}
+
+
+/*layout-----------------*/
+
+.register_wrap {
+    width: 400px;
+    margin: 50px auto 0;
+}
+
+.register_box {
+    padding: 20px;
+    border-radius: 5px;
+}
+
+/*form-------------------*/
+
+.form-inline.double_input input {
+    width: calc(100% - 120px);
+    margin-right: 10px;
+}
+
+.signup_btn {
+    width: 100%;
+    margin-top: 20px;
+    text-align: center;
+    height: 50px;
+    color: #f2cb61;
+    background-color: #fff;
+    border: 2px solid #f2cb61;
+    animation: ease 0.5s;
+    font-size: 20px;
+    font-weight: bold;
+}
+.signup_btn:hover {
+    animation: ease 0.5s;
+    background-color: #000;
+    border: 2px solid #000;
+    color: white;
+}
+

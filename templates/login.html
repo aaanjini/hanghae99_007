@@ -64,7 +64,10 @@
                         window.location.href = '/'
                     } else {
                         // 로그인이 안되면 에러메시지를 띄웁니다.
-                        alert(response['msg'])
+                        alert(response['msg']);
+                        // input 을 비워줍니다.
+                        $("#id").val('');
+                        $("#pw").val('');
                     }
                 }
             })
@@ -74,7 +77,6 @@
 
 </head>
 <body>
-{#master 테스트중입니다.#}
     <div class="login_wrap">
         <a onclick="to_main()" href="javascript:void(0);"><h1 class="logo"><img src="../static/logo.png" alt="logo"></h1>
         </a>
