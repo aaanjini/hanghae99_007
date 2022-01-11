@@ -6,11 +6,9 @@ app = Flask(__name__)
 from pymongo import MongoClient
 
 client = MongoClient('localhost', 27017)
-<<<<<<< HEAD
-db = client.dbsparta
-=======
+
 db = client.hanghae99_007
->>>>>>> 4a4e19e9a40b783cb3378ae138f4085d742cf37e
+
 
 SECRET_KEY = 'SPARTA'
 
@@ -41,7 +39,7 @@ def post():
 # 회원가입-------------------------------
 @app.route("/addUser", methods=["POST"])
 def addUser():
-<<<<<<< HEAD
+
     id = request.form['id']
     pw = request.form['pw']
     nickname = request.form['nickname']
@@ -100,8 +98,7 @@ def delete_star():
 
 
 
-=======
-    return jsonify({'result': 'success'})
+
 
 
 @app.route('/sign_up/check_dup', methods=['POST'])
@@ -136,7 +133,6 @@ def delete_star():
 
 
 # 작성페이지---------------------------------
->>>>>>> 4a4e19e9a40b783cb3378ae138f4085d742cf37e
 
 
 if __name__ == '__main__':
