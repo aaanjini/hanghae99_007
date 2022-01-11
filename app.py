@@ -25,7 +25,7 @@ def home():
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
         user_info = db.user.find_one({"id": payload['id']})  # 받아온 토큰으로 유저의 정보를 가져옵니다
-        return render_template('index.html', nickname=user_info["nick"])
+        return render_template('index.html', nickname=user_info["nickname"])
     except jwt.ExpiredSignatureError:
         return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
     except jwt.exceptions.DecodeError:
@@ -53,11 +53,13 @@ def addUser():
     pw = request.form['pw']
     nickname = request.form['nickname']
 
+    pw_hash = hashlib.sha256(pw.encode('utf-8')).hexdigest()
+
     if (id == "" or pw == "" or nickname == ""):
         return jsonify({'result': 'fail', 'msg': 'please check input'});
     doc = {
         'id': id,
-        'pw': pw,
+        'pw': pw_hash,
         'nickname': nickname,
 
     }
@@ -102,7 +104,7 @@ def api_login():
     else:
         return jsonify({'result': 'fail', 'msg': '아이디/비밀번호가 일치하지 않습니다.'})
 
-@app.route('/api/nick', methods=['GET'])
+@app.route('/api/nickname', methods=['GET'])
 def api_valid():
     token_receive = request.cookies.get('mytoken')
 
@@ -118,7 +120,7 @@ def api_valid():
         # payload 안에 id가 들어있습니다. 이 id로 유저정보를 찾습니다.
         # 여기에선 그 예로 닉네임을 보내주겠습니다.
         userinfo = db.user.find_one({'id': payload['id']}, {'_id': 0})
-        return jsonify({'result': 'success', 'nickname': userinfo['nick']})
+        return jsonify({'result': 'success', 'nickname': userinfo['nickname']})
     except jwt.ExpiredSignatureError:
         # 위를 실행했는데 만료시간이 지났으면 에러가 납니다.
         return jsonify({'result': 'fail', 'msg': '로그인 시간이 만료되었습니다.'})
