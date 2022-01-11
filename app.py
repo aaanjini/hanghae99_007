@@ -95,45 +95,5 @@ def delete_star():
 
 
 
-
-
-
-
-
-
-@app.route('/sign_up/check_dup', methods=['POST'])
-def check_dup():
-    return jsonify({'result': 'success'})
-
-
-# 로그인--------------------------------
-@app.route('/api/login', methods=['POST'])
-def api_login():
-    return jsonify({'result': 'success'})
-
-@app.route('/api/nick', methods=['GET'])
-def api_valid():
-    return jsonify({'result': 'success'})
-
-
-
-# 메인---------------------------------------
-@app.route('/like', methods=['POST'])
-def like_star():
-    return jsonify({'result': 'success'})
-
-@app.route('/canclelike', methods=['POST'])
-def cancle_like():
-    return jsonify({'result': 'success'})
-
-@app.route('/del', methods=['POST'])
-def delete_star():
-    return jsonify({'result': 'success'})
-
-
-
-# 작성페이지---------------------------------
-
-
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)
