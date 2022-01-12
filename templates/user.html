@@ -1,303 +1,417 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
+<head>
+    <meta charset="UTF-8">
 
 
-        <!-- Bootstrap CSS -->
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-              integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-        <link href="{{ url_for('static', filename='main.css') }}" rel="stylesheet">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link href="{{ url_for('static', filename='main.css') }}" rel="stylesheet">
 
-        <!-- JS -->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-                integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-                crossorigin="anonymous"></script>
+    <!-- JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
 
-        <!-- cookie -->
-        <script src=" https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+    <!-- cookie -->
+    <script src=" https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
 
-        <!-- bootstrap -->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
-              integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
-                integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
-                crossorigin="anonymous"></script>
+    <!-- bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+            crossorigin="anonymous"></script>
 
-        <!-- Bulma CSS -->
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
-        <!-- Font Awesome CSS -->
-        <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- Bulma CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+    <!-- Font Awesome CSS -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 
-        <link href="{{ url_for('static', filename='common.css') }}" rel="stylesheet">
-        <link href="{{ url_for('static', filename='user.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='common.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='user.css') }}" rel="stylesheet">
 
-        <title>겨울붕어</title>
-        <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
-        <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
-        <meta property="og:title" content="겨울붕어 - 겨울간식은 여기가 최고"/>
-        <meta property="og:description" content="어떤 겨울 간식을 좋아하시나요? 겨울붕어에서 찾아보세요!"/>
-        <meta property="og:image" content="{{ url_for('static', filename='ogimg.png') }}"/>
+    <title>겨울붕어</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <meta property="og:title" content="겨울붕어 - 겨울간식은 여기가 최고"/>
+    <meta property="og:description" content="어떤 겨울 간식을 좋아하시나요? 겨울붕어에서 찾아보세요!"/>
+    <meta property="og:image" content="{{ url_for('static', filename='ogimg.png') }}"/>
 
-        <script>
+    <script>
 
-            function go_home(){
-                window.location.href = '/'
-            }
-            function login(){
-                window.location.href = '/login'
-            }
-            function register(){
-                window.location.href = '/addUser'
-            }
-            function posting(){
-                window.location.href = '/post'
-            }
-            function logout() {
-                $.removeCookie('mytoken');
-                alert('로그아웃!')
-                window.location.href = '/login'
-            }
+        function go_home() {
+            window.location.href = '/'
+        }
 
-            function del(id) {
-                if (confirm('정말로 삭제하시겠습니까?')) {
-                    $.ajax({
-                        type: 'POST',
-                        url: '/del',
-                        data: {post_id: id},
-                        success: function (response) {
-                            alert(response['msg'])
-                            window.location.href = '/login'
-                        }
-                    });
-                } else {
+        function login() {
+            window.location.href = '/login'
+        }
 
-                }
-            }
+        function register() {
+            window.location.href = '/addUser'
+        }
 
-            function toggle_like(post_id, type) {
-                console.log(post_id, type)
-                let $a_like = $(`#${post_id} a[aria-label='heart']`)
-                console.log($a_like)
-                let $i_like = $a_like.find("i")
-                let idname = $('#' + post_id)
-                let idClass = $('.' + post_id)
-                if (idname.hasClass("fa-heart")) {
-                    $.ajax({
-                        type: "POST",
-                        url: "/update_like",
-                        data: {
-                            post_id_give: post_id,
-                            type_give: type,
-                            action_give: "unlike"
-                        },
-                        success: function (response) {
-                            console.log("unlike")
-                            idname.addClass("fa-heart-o").removeClass("fa-heart")
-                            idClass.text(response["count"])
-                        }
-                    })
-                } else {
-                    $.ajax({
-                        type: "POST",
-                        url: "/update_like",
-                        data: {
-                            post_id_give: post_id,
-                            type_give: type,
-                            action_give: "like"
-                        },
-                        success: function (response) {
-                            console.log("like")
-                            idname.addClass("fa-heart").removeClass("fa-heart-o")
-                            idClass.text(response["count"])
-                        }
-                    })
+        function posting() {
+            window.location.href = '/post'
+        }
 
-                }
-            }
-            function update_profile() {
-                let name = $('#input-name').val()
-                let file = $('#input-pic')[0].files[0]
-                let about = $("#textarea-about").val()
-                let form_data = new FormData()
-                form_data.append("file_give", file)
-                form_data.append("name_give", name)
-                form_data.append("about_give", about)
-                console.log(name, file, about, form_data)
+        function logout() {
+            $.removeCookie('mytoken');
+            alert('로그아웃!')
+            window.location.href = '/login'
+        }
 
+        function del(id) {
+            if (confirm('정말로 삭제하시겠습니까?')) {
                 $.ajax({
-                    type: "POST",
-                    url: "/update_profile",
-                    data: form_data,
-                    cache: false,
-                    contentType: false,
-                    processData: false,
+                    type: 'POST',
+                    url: '/del',
+                    data: {post_id: id},
                     success: function (response) {
-                        if (response["result"] == "success") {
-                            alert(response["msg"])
-                            window.location.reload()
-
-                        }
+                        alert(response['msg'])
+                        window.location.href = '/login'
                     }
                 });
+            } else {
+
             }
+        }
+
+        function toggle_like(post_id, type) {
+            console.log(post_id, type)
+            let $a_like = $(`#${post_id} a[aria-label='heart']`)
+            console.log($a_like)
+            let $i_like = $a_like.find("i")
+            let idname = $('#' + post_id)
+            let idClass = $('.' + post_id)
+            if (idname.hasClass("fa-heart")) {
+                $.ajax({
+                    type: "POST",
+                    url: "/update_like",
+                    data: {
+                        post_id_give: post_id,
+                        type_give: type,
+                        action_give: "unlike"
+                    },
+                    success: function (response) {
+                        console.log("unlike")
+                        idname.addClass("fa-heart-o").removeClass("fa-heart")
+                        idClass.text(response["count"])
+                    }
+                })
+            } else {
+                $.ajax({
+                    type: "POST",
+                    url: "/update_like",
+                    data: {
+                        post_id_give: post_id,
+                        type_give: type,
+                        action_give: "like"
+                    },
+                    success: function (response) {
+                        console.log("like")
+                        idname.addClass("fa-heart").removeClass("fa-heart-o")
+                        idClass.text(response["count"])
+                    }
+                })
+
+            }
+        }
+
+        function update_profile() {
+            let name = $('#input-name').val()
+            let file = $('#input-pic')[0].files[0]
+            let about = $("#textarea-about").val()
+            let form_data = new FormData()
+            form_data.append("file_give", file)
+            form_data.append("name_give", name)
+            form_data.append("about_give", about)
+            console.log(name, file, about, form_data)
+
+            $.ajax({
+                type: "POST",
+                url: "/update_profile",
+                data: form_data,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    if (response["result"] == "success") {
+                        alert(response["msg"])
+                        window.location.reload()
+
+                    }
+                }
+            });
+        }
 
 
-        </script>
-    </head>
-    <body>
-        <div class="navi">
-            {% if status %}
-                <div class="row">
-                    <div class="col" style="text-align: left">
-                        <span><a class="profile_go" href="/user/{{ user_info.id }}">{{ user_info.nickname }}님</a> 환영합니다!</span>
-                    </div>
-                    <div class="col">
-                        <a href="javascript:posting();">게시물 작성</a>
-                        <a href="javascript:logout();">로그아웃</a>
+    </script>
+</head>
+<body>
+    <div class="navi">
+        {% if status %}
+            <div class="row">
+                <div class="col" style="text-align: left">
+                    <span><a class="profile_go" href="/user/{{ user_info.id }}">{{ user_info.nickname }}님</a> 환영합니다!</span>
+                </div>
+                <div class="col">
+                    <a href="javascript:posting();">게시물 작성</a>
+                    <a href="javascript:logout();">로그아웃</a>
+                </div>
+            </div>
+        {% else %}
+            <a href="javascript:login();">로그인</a>
+            <a href="javascript:register();">회원가입</a>
+        {% endif %}
+    </div>
+    <div class="header">
+        <img class="logo" src="/static/image/bunga.png" style="cursor: pointer; margin-top: 50px;" onclick="go_home();">
+        <h1>겨울붕어</h1>
+    </div>
+    {#     유저 프로필 영역 ------   #}
+    <div class="user_wrap hero mt20">
+        <div class="hero-body" style="padding:20px;margin:auto;min-width: 500px">
+            <article class="media">
+                <figure class="media-left" style="align-self: center">
+                    <a class="image is-96x96" href="#">
+                        <img class="is-rounded profile_img"
+                             src="{{ url_for('static', filename=user_info.profile_pic_real) }}">
+                    </a>
+                </figure>
+                <div class="media-content">
+                    <div class="content">
+                        <p>
+                            <strong>{{ user_info.nickname }}</strong> <small>@ {{ user_info.id }}</small>
+                            <br>
+                            {{ user_info.profile_info }}
+                        </p>
                     </div>
                 </div>
-            {% else %}
-                <a href="javascript:login();">로그인</a>
-                <a href="javascript:register();">회원가입</a>
+            </article>
+            {% if status %}
+                <nav id="btns-me" class="level is-mobile" style="margin-top:2rem">
+                    <a class="button level-item has-text-centered is-sparta" aria-label="edit"
+                       onclick='$("#modal-edit").addClass("is-active")'>
+                        프로필 수정&nbsp;&nbsp;&nbsp;
+                        <span class="icon is-small">
+                                    <i class="fa fa-pencil" aria-hidden="true"></i>
+                                </span>
+                    </a>
+                </nav>
+                <div class="modal" id="modal-edit">
+                    <div class="modal-background" onclick='$("#modal-edit").removeClass("is-active")'></div>
+                    <div class="modal-content">
+                        <div class="box">
+                            <article class="media">
+                                <div class="media-content">
+                                    <div class="field">
+                                        <label class="label" for="input-name">이름</label>
+                                        <p class="control">
+                                            <input id="input-name" class="input" placeholder="홍길동"
+                                                   value="{{ user_info.nickname }}">
+                                        </p>
+                                    </div>
+                                    <div class="field">
+                                        <label class="label" for="input-pic">프로필 사진</label>
+                                        <div class="control is-expanded">
+                                            <div class="file has-name">
+                                                <label class="file-label" style="width:100%">
+                                                    <input id="input-pic" class="file-input" type="file" name="resume">
+                                                    <span class="file-cta">
+                                                                <span class="file-icon">
+                                                                    <i class="fa fa-upload"></i>
+                                                                </span>
+                                                                <span class="file-label">파일 선택</span>
+                                                            </span>
+                                                    <span id="file-name" class="file-name"
+                                                          style="width:100%;max-width:100%">{{ user_info.profile_pic }}</span>
+                                                </label>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="field">
+                                        <label class="label" for="textarea-about">나는 누구?</label>
+                                        <p class="control">
+                                            <textarea id="textarea-about" class="textarea"
+                                                      placeholder="자기소개하기">{{ user_info.profile_info }}</textarea>
+                                        </p>
+                                    </div>
+                                    <nav class="level is-mobile">
+                                        <div class="level-left">
+
+                                        </div>
+                                        <div class="level-right">
+                                            <div class="level-item">
+                                                <a class="button is-sparta" onclick="update_profile()">업데이트</a>
+                                            </div>
+                                            <div class="level-item">
+                                                <a class="button is-sparta is-outlined"
+                                                   onclick='$("#modal-edit").removeClass("is-active")'>취소</a>
+                                            </div>
+                                        </div>
+                                    </nav>
+                                </div>
+                            </article>
+                        </div>
+                    </div>
+                    <button class="modal-close is-large" aria-label="close"
+                            onclick='$("#modal-edit").removeClass("is-active")'></button>
+                </div>
             {% endif %}
         </div>
-        <div class="header">
-            <img class="logo" src="/static/image/bunga.png" style="cursor: pointer; margin-top: 50px;" onclick="go_home();">
-            <h1>겨울붕어</h1>
-        </div>
-        {#     유저 프로필 영역 ------   #}
-        <div class="user_wrap hero mt20">
-            <div class="hero-body" style="padding:20px;margin:auto;min-width: 500px">
-                <article class="media">
-                    <figure class="media-left" style="align-self: center">
-                        <a class="image is-96x96" href="#">
-                            <img class="is-rounded profile_img" src="{{ url_for('static', filename=user_info.profile_pic_real) }}">
-                        </a>
-                    </figure>
-                    <div class="media-content">
-                        <div class="content">
-                            <p>
-                                <strong>{{ user_info.nickname }}</strong> <small>@ {{ user_info.id }}</small>
-                                <br>
-                                {{ user_info.profile_info }}
-                            </p>
-                        </div>
-                    </div>
-                </article>
-                {% if status %}
-                    <nav id="btns-me" class="level is-mobile" style="margin-top:2rem">
-                        <a class="button level-item has-text-centered is-sparta" aria-label="edit" onclick='$("#modal-edit").addClass("is-active")'>
-                            프로필 수정&nbsp;&nbsp;&nbsp;
-                            <span class="icon is-small">
-                                <i class="fa fa-pencil" aria-hidden="true"></i>
-                            </span>
-                        </a>
-                    </nav>
-                    <div class="modal" id="modal-edit">
-                        <div class="modal-background" onclick='$("#modal-edit").removeClass("is-active")'></div>
-                        <div class="modal-content">
-                            <div class="box">
-                                <article class="media">
-                                    <div class="media-content">
-                                        <div class="field">
-                                            <label class="label" for="input-name">이름</label>
-                                            <p class="control">
-                                                <input id="input-name" class="input" placeholder="홍길동" value="{{ user_info.nickname }}">
-                                            </p>
-                                        </div>
-                                        <div class="field">
-                                            <label class="label" for="input-pic">프로필 사진</label>
-                                            <div class="control is-expanded">
-                                                <div class="file has-name">
-                                                    <label class="file-label" style="width:100%">
-                                                        <input id="input-pic" class="file-input" type="file" name="resume">
-                                                        <span class="file-cta">
-                                                            <span class="file-icon">
-                                                                <i class="fa fa-upload"></i>
-                                                            </span>
-                                                            <span class="file-label">파일 선택</span>
-                                                        </span>
-                                                        <span id="file-name" class="file-name" style="width:100%;max-width:100%">{{ user_info.profile_pic }}</span>
-                                                    </label>
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                        <div class="field">
-                                            <label class="label" for="textarea-about">나는 누구?</label>
-                                            <p class="control">
-                                                <textarea id="textarea-about" class="textarea" placeholder="자기소개하기">{{ user_info.profile_info }}</textarea>
-                                            </p>
-                                        </div>
-                                        <nav class="level is-mobile">
-                                            <div class="level-left">
-
-                                            </div>
-                                            <div class="level-right">
-                                                <div class="level-item">
-                                                    <a class="button is-sparta" onclick="update_profile()">업데이트</a>
-                                                </div>
-                                                <div class="level-item">
-                                                    <a class="button is-sparta is-outlined"
-                                                       onclick='$("#modal-edit").removeClass("is-active")'>취소</a>
-                                                </div>
-                                            </div>
-                                        </nav>
-                                    </div>
-                                </article>
-                            </div>
-                        </div>
-                    <button class="modal-close is-large" aria-label="close" onclick='$("#modal-edit").removeClass("is-active")'></button>
-                </div>
-                {% endif %}
-            </div>
-        </div>
-        {#    -------유저 프로필 영역 끝   #}
-        <div class="orange_back">
-            <div class="wrap" style="padding-top: 50px;">
-                <div class="row row-cols-4">
-
-                        {% for post in posts %}
-                            <div class="col">
-                                <div class="ca">
+    </div>
+    {#    -------유저 프로필 영역 끝   #}
+    <div class="orange_back">
+        <div class="wrap" style="padding-top: 50px;">
+            <div class="row row-cols-5">
+                {% for post in posts %}
+                    {% if post.id == user_info.id %}
+                    {#---------------------------------------------------------모달start--------------------------------------------------------------#}
+                        <div class="modal" id="modal_{{ post._id }}">
+                            <div class="modal-background" onclick='$("#modal_{{ post._id }}").removeClass("is-active")'></div>
+                            <div class="row modal_body">
+                                <div class="col-6">
                                     <div>
                                         <img class="card_image" src="{{ post.img_url }}">
                                     </div>
                                     <div class="card_body">
-                                        <h4 style="margin: 0">{{ post.title }}</h4>
-                                        <a href="/user/{{ user_info.id }}"><small>{{ post.nickname }}</small></a>
-                                        <p class="ptag">{{ post.review }}</p>
-                                        <small>{{ post.address }}</small>
                                         <div class="row">
-                                            <div class="col" style="text-align: left">
-                                                <a class="" aria-label="heart" onclick="toggle_like('{{ post._id }}', 'heart')">
-                                                    <span class="icon is-small">
-                                                        {% if post.heart_by_me == true %}
-                                                            <i id="{{ post._id }}" class="fa fa-heart" aria-hidden="true"></i>
-                                                        {% else %}
-                                                            <i id="{{ post._id }}" class="fa fa-heart-o" aria-hidden="true"></i>
-                                                        {% endif %}
-                                                    </span>&nbsp;
-                                                    <span class="like-num {{ post._id }}">{{ post.like_count }}</span>
+                                            <span style="margin: 0; font-size: 30px;">{{ post.title }}</span>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col font_13">{{ post.nickname }}</div>
+                                            {% if post.like_count > 1 %}
+                                                <div class="col" style="text-align: right">
+                                                    <img src="/static/image/fire.png" width="15px"
+                                                         style="vertical-align: -3px">
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                        <div class="row">
+                                            <p class="modal_ptag" style="overflow: auto; height: 150px;">{{ post.review }}daspkfoasjddaspkfoasjdoiasjfoiasjoaisjdfoiasjdoasjfiasjodjaisdjasdjiasjfoadaspkfoasjdoiasjfoiasjoaisjdfoiasjdoasjfiasjodjaisdjasdjiasjfodaspkfoasjdoiasjfoiasjoaisjdfoiasjdoasjfiasjodjaisdjasdjiasjfosijdsaiodjisadaiosdjasoijoiasjfoiasjoaisjdfoiasjdoasjfiasjodjaisdjasdjiasjfoadaspkfoasjdoiasjfoiasjoaisjdfoiasjdoasjfiasjodjaisdjasdjiasjfodaspkfoasjdoiasjfoiasjoaisjdfoiasjdoasjfiasjodjaisdjasdjiasjfosijdsaiodjisadaiosdjasoij</p>
+                                        </div>
+                                        <div class="row">
+                                            <small>{{ post.address }}</small>
+                                        </div>
+                                        <div class="row">
+                                            <Div class="col" style="text-align: left">
+                                                <a class="" aria-label="heart"
+                                                   onclick="toggle_like('{{ post._id }}', 'heart')">
+                                        <span class="icon is-small">
+                                            {% if post.heart_by_me == true %}
+                                                <i id="mh_{{ post._id }}" class="fa fa-heart" aria-hidden="true"></i>
+                                            {% else %}
+                                                <i id="mh_{{ post._id }}" class="fa fa-heart-o" aria-hidden="true"></i>
+                                            {% endif %}
+                                        </span>&nbsp;<span
+                                                        class="like-num {{ post._id }}">{{ post.like_count }}</span>
                                                 </a>
-                                            </div>
+                                            </Div>
                                             <div class="col" style="text-align: right">
                                                 {% if user_info.nickname == post.nickname %}
-                                                    <img type="button" onclick="del('{{ post._id }}')" src="/static/image/x.svg">
+                                                    <img type="button" onclick="del('{{ post._id }}')"
+                                                         src="/static/image/x.svg">
                                                 {% endif %}
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="row">
+                                        <div class="col-9">
+                                            <input type="text" class="comment_{{ post._id }}" placeholder="덧글내용">
+                                        </div>
+                                        <div class="col-3 text-end">
+                                            <button type="button" class="btn btn-warning"
+                                                    onclick="comment_insert('{{ post._id }}','{{ user_info.id }}','{{ user_info.nickname }}','{{ user_info.profile_pic_real }}')">
+                                                등록
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6" style="overflow: auto; height: 100%">
+                                    <div class="row">
+                                        {% for comment in comments %}
+                                            {% if post._id == comment.post_id %}
+                                                <div class="row">
+                                                    <div class="col-2">
+                                                        <img src="/static/{{ comment.profile }}" class="comment_img">
+                                                    </div>
+                                                    <div class="col-10 text-left p0">
+                                                        <label>{{ comment.nickname }}</label>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <label>{{ comment.comment }}</label>
+                                                </div>
+                                                <br>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+
                                 </div>
                             </div>
-                        {% endfor %}
+                        </div>
+                        {#---------------------------------------------------------모달end--------------------------------------------------------------#}
+                        <div class="col" onclick='$("#modal_{{ post._id }}").addClass("is-active")'>
+                            <div class="ca">
+                                <div>
+                                    <img class="card_image" src="{{ post.img_url }}">
+                                </div>
+                                <div class="card_body">
+                                    <div class="row">
+                                        <div class="col">
+                                            <h4 style="margin: 0">{{ post.title }}</h4>
+                                        </div>
 
-                </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col font_13">{{ post.nickname }}</div>
+                                        {% if post.like_count > 1 %}
+                                            <div class="col" style="text-align: right">
+                                                <img src="/static/image/fire.png" width="15px" style="vertical-align: -3px">
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="row">
+                                        <p class="ptag">{{ post.review }}daspkfoasjdoiasjfoiasjoaisjdfoiasjdoasjfiasjodjaisdjasdjiasjfoadaspkfoasjdoiasjfoiasjoaisjdfoiasjdoasjfiasjodjaisdjasdjiasjfodaspkfoasjdoiasjfoiasjoaisjdfoiasjdoasjfiasjodjaisdjasdjiasjfosijdsaiodjisadaiosdjasoij</p>
+                                    </div>
+                                    <div class="row">
+                                        <small>{{ post.address }}</small>
+                                    </div>
+                                    <div class="row">
+                                        <Div class="col" style="text-align: left">
+                                            <a class="" aria-label="heart"
+                                               onclick="toggle_like('{{ post._id }}', 'heart')">
+                                        <span class="icon is-small">
+                                            {% if post.heart_by_me == true %}
+                                                <i id="{{ post._id }}" class="fa fa-heart" aria-hidden="true"></i>
+                                            {% else %}
+                                                <i id="{{ post._id }}" class="fa fa-heart-o" aria-hidden="true"></i>
+                                            {% endif %}
+                                        </span>&nbsp;<span
+                                                    class="like-num {{ post._id }}">{{ post.like_count }}</span>
+                                            </a>
+                                        </Div>
+                                        <div class="col" style="text-align: right">
+                                            {% if nickname == post.nickname %}
+                                                <img type="button" onclick="del('{{ post._id }}')" src="/static/image/x.svg">
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
             </div>
-            {#wrap end#}
         </div>
-    </body>
+        {#wrap end#}
+    </div>
+</body>
 </html>
 
