@@ -6,6 +6,7 @@ app = Flask(__name__)
 
 from pymongo import MongoClient
 
+
 client = MongoClient('15.164.226.215', 27017, username="test", password="test")
 
 db = client.hanghae99_007
