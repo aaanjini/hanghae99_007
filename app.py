@@ -41,7 +41,9 @@ def home():
             post["_id"] = str(post["_id"])
             post["like_count"] = db.likes.count_documents({"post_id": post["_id"], "type": "heart"})
             post["heart_by_me"] = bool(db.likes.find_one({"post_id": post["_id"], "type": "heart", "username": payload['id']}))
-        return render_template('index.html', user_info=user_info["nickname"], posts=posts)
+
+        return render_template('index.html', user_info=user_info, posts=posts)
+
     except jwt.ExpiredSignatureError:
         return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
     except jwt.exceptions.DecodeError:
@@ -58,9 +60,8 @@ def register():
     return render_template('register.html')
 
 # 유저페이지 추가
-@app.route('/user')
-def user():
-    print('href=/')
+@app.route('/user/<id>')
+def user(id):
     token_receive = request.cookies.get('mytoken')  # 사용자의 토큰을 받아옵니다.
 
     # 여러개 찾기 - 예시 ( _id 값은 제외하고 출력)
@@ -68,16 +69,20 @@ def user():
 
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        # status = (id == payload["id"])  # 내 프로필이면 True, 다른 사람 프로필 페이지면 False
+        status = (id == payload["id"])  # 내 프로필이면 True, 다른 사람 프로필 페이지면 False
 
-        user_info = db.user.find_one({"id": payload['id']})  # 받아온 토큰으로 유저의 정보를 가져옵니다
-
+        user_info = db.user.find_one({"id": id}, {"_id": False})
+        # id_receive = request.args.get("id_give")
+        # if id_receive == "":
+        #     posts = list(db.post.find({}).limit(20))
+        # else:
+        #     posts = list(db.post.find({"id": id_receive}).limit(20))
         for post in posts:
             post["_id"] = str(post["_id"])
             post["like_count"] = db.likes.count_documents({"post_id": post["_id"], "type": "heart"})
             post["heart_by_me"] = bool(
                 db.likes.find_one({"post_id": post["_id"], "type": "heart", "username": payload['id']}))
-        return render_template('user.html', user_info=user_info, nickname=user_info["nickname"], posts=posts)
+        return render_template('user.html', user_info=user_info, posts=posts, status=status)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for("home"))
 
@@ -257,7 +262,7 @@ def save_img():
         name_receive = request.form["name_give"]
         about_receive = request.form["about_give"]
         new_doc = {
-            "profile_name": name_receive,
+            "nickname": name_receive,
             "profile_info": about_receive
         }
         if 'file_give' in request.files:
