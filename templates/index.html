@@ -171,7 +171,7 @@
                                 <span style="margin: 0; font-size: 30px;">{{ post.title }}</span>
                             </div>
                             <div class="row">
-                                <div class="col font_13">{{ post.nickname }}</div>
+                                <div class="col font_13"><a href="/user/{{ post.id }}">{{ post.nickname }}</a></div>
                                 {% if post.like_count > 1 %}
                                     <div class="col" style="text-align: right">
                                         <img src="/static/image/fire.png" width="15px"
