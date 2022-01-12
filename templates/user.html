@@ -266,20 +266,36 @@
                                         <img class="card_image" src="{{ post.img_url }}">
                                     </div>
                                     <div class="card_body">
-                                        <h4 style="margin: 0">{{ post.title }}</h4>
-                                        <a href="/user/{{ user_info.id }}"><small>{{ post.nickname }}</small></a>
-                                        <p class="ptag">{{ post.review }}</p>
-                                        <small>{{ post.address }}</small>
+                                        <div class="row">
+                                            <div class="col">
+                                                <h4 style="margin: 0">{{ post.title }}</h4>
+                                            </div>
+
+                                        </div>
+                                        <div class="row info_box">
+                                            <div class="col font_13">{{ post.nickname }}</div>
+                                            {% if post.like_count > 1 %}
+                                                <div class="col" style="text-align: right">
+                                                    <img src="/static/image/fire.png" width="15px" style="vertical-align: -3px">
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                        <div class="row comment_box">
+                                            <p class="ptag">{{ post.review }}</p>
+                                        </div>
+                                        <div class="row">
+                                            <small>{{ post.address }}</small>
+                                        </div>
                                         <div class="row">
                                             <div class="col" style="text-align: left">
                                                 <a class="" aria-label="heart" onclick="toggle_like('{{ post._id }}', 'heart')">
-                                                    <span class="icon is-small">
-                                                        {% if post.heart_by_me == true %}
-                                                            <i id="{{ post._id }}" class="fa fa-heart" aria-hidden="true"></i>
-                                                        {% else %}
-                                                            <i id="{{ post._id }}" class="fa fa-heart-o" aria-hidden="true"></i>
-                                                        {% endif %}
-                                                    </span>&nbsp;
+                                                <span class="icon is-small">
+                                                    {% if post.heart_by_me == true %}
+                                                        <i id="{{ post._id }}" class="fa fa-heart" aria-hidden="true"></i>
+                                                    {% else %}
+                                                        <i id="{{ post._id }}" class="fa fa-heart-o" aria-hidden="true"></i>
+                                                    {% endif %}
+                                                </span>
                                                     <span class="like-num {{ post._id }}">{{ post.like_count }}</span>
                                                 </a>
                                             </div>
@@ -290,6 +306,7 @@
                                             </div>
                                         </div>
                                     </div>
+
                                 </div>
                             </div>
                         {% endfor %}
