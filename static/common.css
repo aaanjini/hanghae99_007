@@ -1,3 +1,49 @@
+@import url('https://cdn.rawgit.com/moonspam/NanumSquare/master/nanumsquare.css');
+@font-face {
+    font-family: 'ACCchildrenheartOTF-Regular';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2112-2@1.0/ACCchildrenheartOTF-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+* {
+    font-family: 'nanumsquare', 'sans-serif';
+}
+
+/*navi css----------------------*/
+
+.navi  {
+    background-color: #fff;
+    height: 40px;
+    padding: 8px 20px;
+}
+.navi a {
+    color: #000;
+}
+.navi a:first-child {
+    position: relative;
+    padding-right: 10px;
+}
+.navi a:first-child:after {
+    position: absolute;
+    content: '|';
+    color: #000;
+    right: 0;
+    top: -5px;
+}
+.header {
+    margin-top: 20px;
+
+}
+.header img {
+    width: 170px;
+}
+.header h1 {
+    font-family: 'ACCchildrenheartOTF-Regular','sans-serif';
+    font-size: 25px;
+}
+
+/*--------------------------------------------*/
+
 .form-control {
     border: none;
 }
@@ -39,7 +85,15 @@ input::placeholder {
 
 /*margin&padding---------*/
 
+.mt20 {
+    margin-top: 20px;
+}
 .mb20 {
     margin-bottom: 20px;
+}
+
+/*layout---------------*/
+.orange_back {
+    min-height: 250px;
 }
 
