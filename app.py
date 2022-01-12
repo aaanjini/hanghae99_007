@@ -1,6 +1,7 @@
 from flask import Flask, render_template, jsonify, request, session, redirect, url_for
 from bson.objectid import ObjectId
 from werkzeug.utils import secure_filename
+
 app = Flask(__name__)
 
 from pymongo import MongoClient
@@ -85,7 +86,7 @@ def post():
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
         user_info = db.user.find_one({"id": payload['id']})  # 받아온 토큰으로 유저의 정보를 가져옵니다
-        return render_template('post.html', user_info=user_info)
+        return render_template('post.html', user_info=user_info, nickname=user_info["nickname"])
     except jwt.ExpiredSignatureError:
         return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
     except jwt.exceptions.DecodeError:
@@ -110,6 +111,7 @@ def addUser():
         "profile_pic": "",  # 프로필 사진 파일 이름
         "profile_pic_real": "profile_pics/profile_placeholder.png",  # 프로필 사진 기본 이미지
         "profile_info": ""  # 프로필 한 마디
+
     }
     db.user.insert_one(doc)
     return jsonify({'msg': "입력."});
@@ -229,8 +231,9 @@ def save_post():
         img_url_receive = request.form['img_url_give']
         address_receive = request.form['address_give']
         review_receive = request.form['review_give']
-        if (title_receive == "" or img_url_receive == "" or address_receive == "" or review_receive == ""):
-            return jsonify({'result': 'fail', 'msg': '모두 입력하세요'});
+        # if (title_receive == "" or img_url_receive == "" or address_receive == "" or review_receive == ""):
+        #     return jsonify({'result': 'fail', 'msg': '모두 입력하세요'});
+        # if (title_receive != "" or img_url_receive != "" or address_receive != "" or review_receive != ""):
         doc = {
                "img_url": img_url_receive,
                "nickname": user_info["nickname"],
@@ -238,7 +241,7 @@ def save_post():
                "address": address_receive,
                "review": review_receive,
                }
-        db.posts.insert_one(doc)
+        db.post.insert_one(doc)
         return jsonify({'result': 'success', 'msg': f'{user_info["nickname"]}님 게시글 저장!'})
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for("/"))
