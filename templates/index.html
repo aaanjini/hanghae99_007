@@ -6,8 +6,6 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
           integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <link href="{{ url_for('static', filename='main.css') }}" rel="stylesheet">
-    <link href="{{ url_for('static', filename='common.css') }}" rel="stylesheet">
 
     <!-- JS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -34,6 +32,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=East+Sea+Dokdo&display=swap" rel="stylesheet">
+
+    <link href="{{ url_for('static', filename='main.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='common.css') }}" rel="stylesheet">
 
     <script>
         function logout() {
@@ -97,6 +98,14 @@
 
             }
         }
+
+        function modalopen() {
+            let modal = $('.modal');
+            modal.css("display", "block")
+            $('body').addClass('not_scroll');
+            body.style.overflow = "hidden";
+        }
+
     </script>
 </head>
 <body>
@@ -248,11 +257,41 @@
             {% endfor %}
         </div>
         {#---------------------------------------------------------일반붕어end--------------------------------------------------------------#}
+
     </div>
     {#wrap end#}
 </div>
+{#---------------------------------------------------------모달start--------------------------------------------------------------#}
+<div class="modal">
+    <div class="modal_body">
+        modal
+        <button class="modalclose"></button>
+    </div>
+</div>
+<button class="btn-open-popup">modal 띄우기</button>
+<script>
+    const body = document.querySelector('body');
+    const modal = document.querySelector('.modal');
+    const btnOpenPopup = document.querySelector('.btn-open-popup');
 
+    btnOpenPopup.addEventListener('click', () => {
+        modal.classList.toggle('show');
 
+        if (modal.classList.contains('show')) {
+            body.style.overflow = 'hidden';
+        }
+    });
+
+    modal.addEventListener('click', (event) => {
+        if (event.target === modal) {
+            modal.classList.toggle('show');
+
+            if (!modal.classList.contains('show')) {
+                body.style.overflow = 'auto';
+            }
+        }
+    });
+</script>
 </body>
 </html>
 
