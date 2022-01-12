@@ -12,7 +12,6 @@ db = client.hanghae99_007
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 app.config['UPLOAD_FOLDER'] = "./static/profile_pics"
 
-
 SECRET_KEY = 'SPARTA'
 
 import jwt
@@ -20,7 +19,6 @@ import jwt
 from datetime import datetime, timedelta
 
 import hashlib
-
 
 
 # 페이지 접속-----------------------------
@@ -31,6 +29,7 @@ def home():
 
     # 여러개 찾기 - 예시 ( _id 값은 제외하고 출력)
     posts = list(db.post.find({}))
+    comments = list(db.comment.find({}))
 
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
@@ -39,8 +38,9 @@ def home():
         for post in posts:
             post["_id"] = str(post["_id"])
             post["like_count"] = db.likes.count_documents({"post_id": post["_id"], "type": "heart"})
-            post["heart_by_me"] = bool(db.likes.find_one({"post_id": post["_id"], "type": "heart", "username": payload['id']}))
-        return render_template('index.html', nickname=user_info["nickname"], posts=posts)
+            post["heart_by_me"] = bool(
+                db.likes.find_one({"post_id": post["_id"], "type": "heart", "username": payload['id']}))
+        return render_template('index.html', user_info=user_info, posts=posts, comments=comments)
     except jwt.ExpiredSignatureError:
         return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
     except jwt.exceptions.DecodeError:
@@ -52,9 +52,11 @@ def login():
     msg = request.args.get("msg")
     return render_template('login.html', msg=msg)
 
+
 @app.route('/register')
 def register():
     return render_template('register.html')
+
 
 # 유저페이지 추가
 @app.route('/user')
@@ -80,6 +82,7 @@ def user():
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for("home"))
 
+
 @app.route('/post')
 def post():
     token_receive = request.cookies.get('mytoken')  # 사용자의 토큰을 받아옵니다.
@@ -92,10 +95,10 @@ def post():
     except jwt.exceptions.DecodeError:
         return redirect(url_for("login", msg="로그인 정보가 존재하지 않습니다."))
 
+
 # 회원가입-------------------------------
 @app.route("/addUser", methods=["POST"])
 def addUser():
-
     id = request.form['id']
     pw = request.form['pw']
     nickname = request.form['nickname']
@@ -127,8 +130,8 @@ def check_dup():
 # 로그인--------------------------------
 @app.route('/api/login', methods=['POST'])
 def api_login():
-    id_receive = request.form['id_give'] #사용자단에서 넘겨받은 id값
-    pw_receive = request.form['pw_give'] #사용자단에서 넘겨받은 id값
+    id_receive = request.form['id_give']  # 사용자단에서 넘겨받은 id값
+    pw_receive = request.form['pw_give']  # 사용자단에서 넘겨받은 id값
 
     # 회원가입 때와 같은 방법으로 pw를 암호화합니다.
     pw_hash = hashlib.sha256(pw_receive.encode('utf-8')).hexdigest()
@@ -154,6 +157,7 @@ def api_login():
     else:
         return jsonify({'result': 'fail', 'msg': '아이디/비밀번호가 일치하지 않습니다.'})
 
+
 @app.route('/api/nickname', methods=['GET'])
 def api_valid():
     token_receive = request.cookies.get('mytoken')
@@ -178,7 +182,6 @@ def api_valid():
         return jsonify({'result': 'fail', 'msg': '로그인 정보가 존재하지 않습니다.'})
 
 
-
 # 메인---------------------------------------
 @app.route('/update_like', methods=['POST'])
 def update_like():
@@ -187,11 +190,11 @@ def update_like():
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
         user_info = db.user.find_one({"id": payload["id"]})
         print(user_info)
-        post_id_receive = request.form["post_id_give"] #post id
+        post_id_receive = request.form["post_id_give"]  # post id
         print(post_id_receive)
-        type_receive = request.form["type_give"] #type heart
+        type_receive = request.form["type_give"]  # type heart
         print(type_receive)
-        action_receive = request.form["action_give"] #like unlike
+        action_receive = request.form["action_give"]  # like unlike
         print(action_receive)
         doc = {
             "post_id": post_id_receive,
@@ -208,6 +211,7 @@ def update_like():
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for("home"))
 
+
 @app.route('/del', methods=['POST'])
 def delete_star():
     id = request.form['post_id']
@@ -218,6 +222,23 @@ def delete_star():
     return jsonify({'msg': '삭제했습니다'})
 
 
+@app.route('/comment_insert', methods=['POST'])
+def comment_insert():
+
+    doc = {
+        "post_id": request.form['post_id_give'],
+        "comment": request.form['comment_give'],
+        "nickname": request.form['nickname_give'],
+        "id": request.form['id_give'],
+        "profile": request.form['profile_give'],
+    }
+
+    db.comment.insert_one(doc)
+
+    print(doc)
+
+    return jsonify({'msg': '덧글을 등록했습니다'})
+
 
 # 작성페이지---------------------------------
 @app.route('/save_post', methods=['POST'])
@@ -225,7 +246,7 @@ def save_post():
     token_receive = request.cookies.get('mytoken')
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-    # 게시글 저장하기
+        # 게시글 저장하기
         user_info = db.user.find_one({"id": payload["id"]})
         title_receive = request.form['title_give']
         img_url_receive = request.form['img_url_give']
@@ -235,16 +256,17 @@ def save_post():
         #     return jsonify({'result': 'fail', 'msg': '모두 입력하세요'});
         # if (title_receive != "" or img_url_receive != "" or address_receive != "" or review_receive != ""):
         doc = {
-               "img_url": img_url_receive,
-               "nickname": user_info["nickname"],
-               "title": title_receive,
-               "address": address_receive,
-               "review": review_receive,
-               }
+            "img_url": img_url_receive,
+            "nickname": user_info["nickname"],
+            "title": title_receive,
+            "address": address_receive,
+            "review": review_receive,
+        }
         db.post.insert_one(doc)
         return jsonify({'result': 'success', 'msg': f'{user_info["nickname"]}님 게시글 저장!'})
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for("/"))
+
 
 # 유저페이지---------------------------------
 @app.route('/update_profile', methods=['POST'])
@@ -264,13 +286,14 @@ def save_img():
             filename = secure_filename(file.filename)
             extension = filename.split(".")[-1]
             file_path = f"profile_pics/{id}.{extension}"
-            file.save("./static/"+file_path)
+            file.save("./static/" + file_path)
             new_doc["profile_pic"] = filename
             new_doc["profile_pic_real"] = file_path
-        db.user.update_one({'id': payload['id']}, {'$set':new_doc})
+        db.user.update_one({'id': payload['id']}, {'$set': new_doc})
         return jsonify({"result": "success", 'msg': '프로필을 업데이트했습니다.'})
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for("home"))
+
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)

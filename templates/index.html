@@ -43,6 +43,25 @@
             window.location.href = '/login'
         }
 
+        function comment_insert(post_id, id, nickname, profile) {
+            let comment = $('.comment_'+post_id).val();
+            $.ajax({
+                type: "POST",
+                url: "/comment_insert",
+                data: {
+                    post_id_give: post_id,
+                    comment_give: comment,
+                    id_give: id,
+                    nickname_give: nickname,
+                    profile_give: profile
+                },
+                success: function (response) {
+                    alert(response['msg'])
+                    window.location.reload();
+                }
+            })
+        }
+
         function del(id) {
             if (confirm('정말로 삭제하시겠습니까?')) {
                 $.ajax({
@@ -51,7 +70,7 @@
                     data: {post_id: id},
                     success: function (response) {
                         alert(response['msg'])
-                        window.location.href = '/login'
+                        window.location.reload();
                     }
                 });
             } else {
@@ -65,6 +84,7 @@
             console.log($a_like)
             let idname = $('#' + post_id)
             let idClass = $('.' + post_id)
+            let modal_idname = $('#mh_' + post_id)
             if (idname.hasClass("fa-heart")) {
                 $.ajax({
                     type: "POST",
@@ -77,6 +97,7 @@
                     success: function (response) {
                         console.log("unlike")
                         idname.addClass("fa-heart-o").removeClass("fa-heart")
+                        modal_idname.addClass("fa-heart-o").removeClass("fa-heart")
                         idClass.text(response["count"])
                     }
                 })
@@ -92,6 +113,7 @@
                     success: function (response) {
                         console.log("like")
                         idname.addClass("fa-heart").removeClass("fa-heart-o")
+                        modal_idname.addClass("fa-heart").removeClass("fa-heart-o")
                         idClass.text(response["count"])
                     }
                 })
@@ -110,10 +132,10 @@
 </head>
 <body>
 <div class="navi">
-    {% if nickname != null %}
+    {% if user_info.nickname != null %}
         <div class="row">
             <div class="col" style="text-align: left">
-                <span>{{ nickname }}님 환영합니다!</span>
+                <span>{{ user_info.nickname }}님 환영합니다!</span>
             </div>
             <div class="col">
                 <a href="post">게시물 작성</a>
@@ -204,7 +226,92 @@
         </div>
         <div class="row row-cols-5">
             {% for post in posts %}
-                <div class="col">
+                {#---------------------------------------------------------모달start--------------------------------------------------------------#}
+                <div class="modal" id="modal_{{ post._id }}">
+                    <div class="modal-background" onclick='$("#modal_{{ post._id }}").removeClass("is-active")'></div>
+                    <div class="row modal_body">
+                        <div class="col-6">
+                            <div>
+                                <img class="card_image" src="{{ post.img_url }}">
+                            </div>
+                            <div class="card_body">
+                                <div class="row">
+                                    <span style="margin: 0; font-size: 30px;">{{ post.title }}</span>
+                                </div>
+                                <div class="row">
+                                    <div class="col font_13">{{ post.nickname }}</div>
+                                    {% if post.like_count > 1 %}
+                                        <div class="col" style="text-align: right">
+                                            <img src="/static/image/fire.png" width="15px"
+                                                 style="vertical-align: -3px">
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="row">
+                                    <p class="modal_ptag" style="overflow: auto; height: 150px;">{{ post.review }}daspkfoasjddaspkfoasjdoiasjfoiasjoaisjdfoiasjdoasjfiasjodjaisdjasdjiasjfoadaspkfoasjdoiasjfoiasjoaisjdfoiasjdoasjfiasjodjaisdjasdjiasjfodaspkfoasjdoiasjfoiasjoaisjdfoiasjdoasjfiasjodjaisdjasdjiasjfosijdsaiodjisadaiosdjasoijoiasjfoiasjoaisjdfoiasjdoasjfiasjodjaisdjasdjiasjfoadaspkfoasjdoiasjfoiasjoaisjdfoiasjdoasjfiasjodjaisdjasdjiasjfodaspkfoasjdoiasjfoiasjoaisjdfoiasjdoasjfiasjodjaisdjasdjiasjfosijdsaiodjisadaiosdjasoij</p>
+                                </div>
+                                <div class="row">
+                                    <small>{{ post.address }}</small>
+                                </div>
+                                <div class="row">
+                                    <Div class="col" style="text-align: left">
+                                        <a class="" aria-label="heart"
+                                           onclick="toggle_like('{{ post._id }}', 'heart')">
+                                <span class="icon is-small">
+                                    {% if post.heart_by_me == true %}
+                                        <i id="mh_{{ post._id }}" class="fa fa-heart" aria-hidden="true"></i>
+                                    {% else %}
+                                        <i id="mh_{{ post._id }}" class="fa fa-heart-o" aria-hidden="true"></i>
+                                    {% endif %}
+                                </span>&nbsp;<span
+                                                class="like-num {{ post._id }}">{{ post.like_count }}</span>
+                                        </a>
+                                    </Div>
+                                    <div class="col" style="text-align: right">
+                                        {% if nickname == post.nickname %}
+                                            <img type="button" onclick="del('{{ post._id }}')"
+                                                 src="/static/image/x.svg">
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-9">
+                                    <input type="text" class="comment_{{ post._id }}" placeholder="덧글내용">
+                                </div>
+                                <div class="col-3 text-end">
+                                    <button type="button" class="btn btn-warning"
+                                            onclick="comment_insert('{{ post._id }}','{{ user_info.id }}','{{ user_info.nickname }}','{{ user_info.profile_pic_real }}')">
+                                        등록
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6" style="overflow: auto; height: 100%">
+                            <div class="row">
+                                {% for comment in comments %}
+                                    {% if post._id == comment.post_id %}
+                                        <div class="row">
+                                            <div class="col-2">
+                                                <img src="/static/{{ comment.profile }}" class="comment_img">
+                                            </div>
+                                            <div class="col-10 text-left p0">
+                                                <label>{{ comment.nickname }}</label>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <label>{{ comment.comment }}</label>
+                                        </div>
+                                        <br>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                {#---------------------------------------------------------모달end--------------------------------------------------------------#}
+                <div class="col" onclick='$("#modal_{{ post._id }}").addClass("is-active")'>
                     <div class="ca">
                         <div>
                             <img class="card_image" src="{{ post.img_url }}">
@@ -261,37 +368,6 @@
     </div>
     {#wrap end#}
 </div>
-{#---------------------------------------------------------모달start--------------------------------------------------------------#}
-<div class="modal">
-    <div class="modal_body">
-        modal
-        <button class="modalclose"></button>
-    </div>
-</div>
-<button class="btn-open-popup">modal 띄우기</button>
-<script>
-    const body = document.querySelector('body');
-    const modal = document.querySelector('.modal');
-    const btnOpenPopup = document.querySelector('.btn-open-popup');
-
-    btnOpenPopup.addEventListener('click', () => {
-        modal.classList.toggle('show');
-
-        if (modal.classList.contains('show')) {
-            body.style.overflow = 'hidden';
-        }
-    });
-
-    modal.addEventListener('click', (event) => {
-        if (event.target === modal) {
-            modal.classList.toggle('show');
-
-            if (!modal.classList.contains('show')) {
-                body.style.overflow = 'auto';
-            }
-        }
-    });
-</script>
 </body>
 </html>
 
