@@ -111,3 +111,11 @@ input::placeholder {
     min-height: 250px;
 }
 
+/*card-----------------*/
+.info_box {
+    height: 24px;
+}
+.comment_box {
+    height: 85px;
+}
+
