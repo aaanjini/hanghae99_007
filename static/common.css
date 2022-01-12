@@ -30,7 +30,10 @@
     right: 0;
     top: -5px;
 }
+.header {
+    margin-top: 20px;
 
+}
 .header img {
     width: 170px;
 }

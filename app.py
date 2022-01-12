@@ -6,7 +6,6 @@ app = Flask(__name__)
 
 from pymongo import MongoClient
 
-# client = MongoClient('localhost', 27017)
 client = MongoClient('15.164.226.215', 27017, username="test", password="test")
 
 db = client.hanghae99_007
@@ -21,6 +20,8 @@ import jwt
 from datetime import datetime, timedelta
 
 import hashlib
+
+
 
 # 페이지 접속-----------------------------
 @app.route('/', methods=['GET'])
@@ -58,7 +59,26 @@ def register():
 # 유저페이지 추가
 @app.route('/user')
 def user():
-    return render_template('user.html')
+    print('href=/')
+    token_receive = request.cookies.get('mytoken')  # 사용자의 토큰을 받아옵니다.
+
+    # 여러개 찾기 - 예시 ( _id 값은 제외하고 출력)
+    posts = list(db.post.find({}))
+
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        # status = (id == payload["id"])  # 내 프로필이면 True, 다른 사람 프로필 페이지면 False
+
+        user_info = db.user.find_one({"id": payload['id']})  # 받아온 토큰으로 유저의 정보를 가져옵니다
+
+        for post in posts:
+            post["_id"] = str(post["_id"])
+            post["like_count"] = db.likes.count_documents({"post_id": post["_id"], "type": "heart"})
+            post["heart_by_me"] = bool(
+                db.likes.find_one({"post_id": post["_id"], "type": "heart", "username": payload['id']}))
+        return render_template('user.html', user_info=user_info, nickname=user_info["nickname"], posts=posts)
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for("home"))
 
 @app.route('/post')
 def post():
@@ -88,12 +108,12 @@ def addUser():
         'id': id,
         'pw': pw_hash,
         'nickname': nickname,
-        "profile_pic": "", # 프로필 사진 파일 이름
-        "profile_pic_real": "profile_pics/profile_placeholder.png",
-        "profile_info": "" #한마디
+        "profile_pic": "",  # 프로필 사진 파일 이름
+        "profile_pic_real": "profile_pics/profile_placeholder.png",  # 프로필 사진 기본 이미지
+        "profile_info": ""  # 프로필 한 마디
 
     }
-    db.user.insert_one(doc);
+    db.user.insert_one(doc)
     return jsonify({'msg': "입력."});
 
 
@@ -227,7 +247,30 @@ def save_post():
         return redirect(url_for("/"))
 
 # 유저페이지---------------------------------
-
+@app.route('/update_profile', methods=['POST'])
+def save_img():
+    token_receive = request.cookies.get('mytoken')
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        id = payload["id"]
+        name_receive = request.form["name_give"]
+        about_receive = request.form["about_give"]
+        new_doc = {
+            "profile_name": name_receive,
+            "profile_info": about_receive
+        }
+        if 'file_give' in request.files:
+            file = request.files["file_give"]
+            filename = secure_filename(file.filename)
+            extension = filename.split(".")[-1]
+            file_path = f"profile_pics/{id}.{extension}"
+            file.save("./static/"+file_path)
+            new_doc["profile_pic"] = filename
+            new_doc["profile_pic_real"] = file_path
+        db.user.update_one({'id': payload['id']}, {'$set':new_doc})
+        return jsonify({"result": "success", 'msg': '프로필을 업데이트했습니다.'})
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for("home"))
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)
