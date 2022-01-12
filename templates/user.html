@@ -2,7 +2,8 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>겨울붕어</title>
+
+
         <!-- Bootstrap CSS -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
               integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
@@ -31,6 +32,13 @@
 
         <link href="{{ url_for('static', filename='common.css') }}" rel="stylesheet">
         <link href="{{ url_for('static', filename='user.css') }}" rel="stylesheet">
+
+        <title>겨울붕어</title>
+        <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+        <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+        <meta property="og:title" content="겨울붕어 - 겨울간식은 여기가 최고"/>
+        <meta property="og:description" content="어떤 겨울 간식을 좋아하시나요? 겨울붕어에서 찾아보세요!"/>
+        <meta property="og:image" content="{{ url_for('static', filename='ogimg.png') }}"/>
 
         <script>
             function go_home(){
@@ -131,7 +139,7 @@
             {% if nickname != null %}
                 <div class="row">
                     <div class="col" style="text-align: left">
-                        <span>{{ nickname }}님 환영합니다!</span>
+                        <span><a class="profile_go" href="/user">{{ nickname }}님</a> 환영합니다!</span>
                     </div>
                     <div class="col">
                         <a href="#">게시물 작성</a>
