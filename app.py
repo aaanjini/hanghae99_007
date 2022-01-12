@@ -6,8 +6,8 @@ app = Flask(__name__)
 
 from pymongo import MongoClient
 
-client = MongoClient('localhost', 27017)
-#client = MongoClient('15.164.226.215', 27017, username="test", password="test")
+# client = MongoClient('localhost', 27017)
+client = MongoClient('15.164.226.215', 27017, username="test", password="test")
 
 db = client.hanghae99_007
 app.config["TEMPLATES_AUTO_RELOAD"] = True
@@ -221,7 +221,7 @@ def save_post():
                "address": address_receive,
                "review": review_receive,
                }
-        db.posts.insert_one(doc)
+        db.post.insert_one(doc)
         return jsonify({'result': 'success', 'msg': f'{user_info["nickname"]}님 게시글 저장!'})
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for("/"))
