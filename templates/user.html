@@ -258,8 +258,8 @@
         <div class="orange_back">
             <div class="wrap" style="padding-top: 50px;">
                 <div class="row row-cols-4">
-
                         {% for post in posts %}
+                            {% if post.nickname == user_info.id %}
                             <div class="col">
                                 <div class="ca">
                                     <div>
@@ -292,6 +292,7 @@
                                     </div>
                                 </div>
                             </div>
+                            {% endif %}
                         {% endfor %}
 
                 </div>
