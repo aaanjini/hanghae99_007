@@ -9,6 +9,13 @@
     font-family: 'nanumsquare', 'sans-serif';
 }
 
+input[type=password] {
+    font-family: 'sans-serif';
+}
+input[type=password]::placeholder {
+    font-family: 'nanumsquare', 'sans-serif';
+}
+
 /*navi css----------------------*/
 
 .navi  {
@@ -40,6 +47,13 @@
 .header h1 {
     font-family: 'ACCchildrenheartOTF-Regular','sans-serif';
     font-size: 25px;
+}
+.profile_go {
+    padding-right: 0 !important;
+}
+
+.profile_go:after {
+    content: '' !important;
 }
 
 /*--------------------------------------------*/
