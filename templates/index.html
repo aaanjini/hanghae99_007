@@ -6,8 +6,6 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
           integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <link href="{{ url_for('static', filename='main.css') }}" rel="stylesheet">
-    <link href="{{ url_for('static', filename='common.css') }}" rel="stylesheet">
 
     <!-- JS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -35,11 +33,33 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=East+Sea+Dokdo&display=swap" rel="stylesheet">
 
+    <link href="{{ url_for('static', filename='main.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='common.css') }}" rel="stylesheet">
+
     <script>
         function logout() {
             $.removeCookie('mytoken');
             alert('로그아웃!')
             window.location.href = '/login'
+        }
+
+        function comment_insert(post_id, id, nickname, profile) {
+            let comment = $('.comment_' + post_id).val();
+            $.ajax({
+                type: "POST",
+                url: "/comment_insert",
+                data: {
+                    post_id_give: post_id,
+                    comment_give: comment,
+                    id_give: id,
+                    nickname_give: nickname,
+                    profile_give: profile
+                },
+                success: function (response) {
+                    alert(response['msg'])
+                    window.location.reload();
+                }
+            })
         }
 
         function del(id) {
@@ -50,7 +70,8 @@
                     data: {post_id: id},
                     success: function (response) {
                         alert(response['msg'])
-                        window.location.reload()
+                        window.location.reload();
+
                     }
                 });
             } else {
@@ -64,6 +85,7 @@
             console.log($a_like)
             let idname = $('#' + post_id)
             let idClass = $('.' + post_id)
+            let modal_idname = $('#mh_' + post_id)
             if (idname.hasClass("fa-heart")) {
                 $.ajax({
                     type: "POST",
@@ -76,6 +98,7 @@
                     success: function (response) {
                         console.log("unlike")
                         idname.addClass("fa-heart-o").removeClass("fa-heart")
+                        modal_idname.addClass("fa-heart-o").removeClass("fa-heart")
                         idClass.text(response["count"])
                     }
                 })
@@ -91,11 +114,18 @@
                     success: function (response) {
                         console.log("like")
                         idname.addClass("fa-heart").removeClass("fa-heart-o")
+                        modal_idname.addClass("fa-heart").removeClass("fa-heart-o")
                         idClass.text(response["count"])
                     }
                 })
 
             }
+        }
+        function modalopen() {
+            let modal = $('.modal');
+            modal.css("display", "block")
+            $('body').addClass('not_scroll');
+            body.style.overflow = "hidden";
         }
     </script>
 </head>
@@ -104,7 +134,8 @@
     {% if user_info.nickname != null %}
         <div class="row">
             <div class="col" style="text-align: left">
-                <span><a class="profile_go" href="/user/{{ user_info.id }}">{{ user_info.nickname }}님</a> 환영합니다!</span>
+              <span><a class="profile_go" href="/user/{{ user_info.id }}">{{ user_info.nickname }}님</a> 환영합니다!</span>
+
             </div>
             <div class="col">
                 <a href="post">게시물 작성</a>
@@ -120,103 +151,38 @@
     <img src="/static/image/bunga.png" class="titleimage" width="250px">
     <h1 class="titlefont">겨울붕어</h1>
 </div>
-<div class="">
-    <div class="wrap" style="padding-top: 20px;">
-        {#---------------------------------------------------------핫한붕어start--------------------------------------------------------------#}
-        <div class="row">
-            <div class="col">
-                <span class="subtitle2">핫한붕어</span>
-            </div>
+<div class="wrap" style="padding-top: 20px;">
+    {#---------------------------------------------------------붕어목록start--------------------------------------------------------------#}
+    <div class="row">
+        <div class="col">
+            <span class="subtitle2">붕어목록</span>
         </div>
-        <div class="row row-cols-5">
-            {% for post in posts %}
-                {% if post.like_count > 1 %}
-                    <div class="col">
-                        <div class="ca">
-                            <div>
-                                <img class="card_image" src="{{ post.img_url }}">
-                            </div>
-                            <div class="card_body">
-                                <div class="row">
-                                    <div class="col">
-                                        <h4 style="margin: 0">{{ post.title }}</h4>
-                                    </div>
-
-                                </div>
-                                <div class="row info_box">
-                                    <div class="col font_13">{{ post.nickname }}</div>
-                                    {% if post.like_count > 1 %}
-                                        <div class="col" style="text-align: right">
-                                            <img src="/static/image/fire.png" width="15px" style="vertical-align: -3px">
-                                        </div>
-                                    {% endif %}
-                                </div>
-                                <div class="row comment_box">
-                                    <p class="ptag">{{ post.review }}daspkfoasjdoiasjfoiasjoaisjdfoiasjdoasjfiasjodjaisdjasdjiasjfoadaspkfoasjdoiasjfoiasjoaisjdfoiasjdoasjfiasjodjaisdjasdjiasjfodaspkfoasjdoiasjfoiasjoaisjdfoiasjdoasjfiasjodjaisdjasdjiasjfosijdsaiodjisadaiosdjasoij</p>
-                                </div>
-                                <div class="row">
-                                    <small>{{ post.address }}</small>
-                                </div>
-                                <div class="row">
-                                    <Div class="col" style="text-align: left">
-                                        <a class="" aria-label="heart"
-                                           onclick="toggle_like('{{ post._id }}', 'heart')">
-                                <span class="icon is-small">
-                                    {% if post.heart_by_me == true %}
-                                        <i id="{{ post._id }}" class="fa fa-heart" aria-hidden="true"></i>
-                                    {% else %}
-                                        <i id="{{ post._id }}" class="fa fa-heart-o" aria-hidden="true"></i>
-                                    {% endif %}
-                                </span>&nbsp;<span
-                                                class="like-num {{ post._id }}">{{ post.like_count }}</span>
-                                        </a>
-                                    </Div>
-                                    <div class="col" style="text-align: right">
-                                        {% if nickname == post.nickname %}
-                                            <img type="button" onclick="del('{{ post._id }}')"
-                                                 src="/static/image/x.svg">
-                                        {% endif %}
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                {% endif %}
-            {% endfor %}
-        </div>
-        {#----------------------------------------------------------핫한붕어end---------------------------------------------------------------#}
-        <br>
-        {#---------------------------------------------------------일반붕어start--------------------------------------------------------------#}
-        <div class="row">
-            <div class="col">
-                <span class="subtitle2">일반붕어</span>
-            </div>
-        </div>
-        <div class="row row-cols-5">
-            {% for post in posts %}
-                <div class="col">
-                    <div class="ca">
+    </div>
+    <div class="row row-cols-5">
+        {% for post in posts %}
+            {#---------------------------------------------------------모달start--------------------------------------------------------------#}
+            <div class="modal" id="modal_{{ post._id }}">
+                <div class="modal-background" onclick='$("#modal_{{ post._id }}").removeClass("is-active")'></div>
+                <div class="row modal_body">
+                    <div class="col-6">
                         <div>
                             <img class="card_image" src="{{ post.img_url }}">
                         </div>
                         <div class="card_body">
                             <div class="row">
-                                <div class="col">
-                                    <h4 style="margin: 0">{{ post.title }}</h4>
-                                </div>
-
+                                <span style="margin: 0; font-size: 30px;">{{ post.title }}</span>
                             </div>
                             <div class="row info_box">
                                 <div class="col font_13">{{ post.nickname }}</div>
                                 {% if post.like_count > 1 %}
                                     <div class="col" style="text-align: right">
-                                        <img src="/static/image/fire.png" width="15px" style="vertical-align: -3px">
+                                        <img src="/static/image/fire.png" width="15px"
+                                             style="vertical-align: -3px">
                                     </div>
                                 {% endif %}
                             </div>
                             <div class="row comment_box">
-                                <p class="ptag">{{ post.review }}daspkfoasjdoiasjfoiasjoaisjdfoiasjdoasjfiasjodjaisdjasdjiasjfoadaspkfoasjdoiasjfoiasjoaisjdfoiasjdoasjfiasjodjaisdjasdjiasjfodaspkfoasjdoiasjfoiasjoaisjdfoiasjdoasjfiasjodjaisdjasdjiasjfosijdsaiodjisadaiosdjasoij</p>
+                                <p class="modal_ptag" style="overflow: auto; height: 150px;">{{ post.review }}daspkfoasjddaspkfoasjdoiasjfoiasjoaisjdfoiasjdoasjfiasjodjaisdjasdjiasjfoadaspkfoasjdoiasjfoiasjoaisjdfoiasjdoasjfiasjodjaisdjasdjiasjfodaspkfoasjdoiasjfoiasjoaisjdfoiasjdoasjfiasjodjaisdjasdjiasjfosijdsaiodjisadaiosdjasoijoiasjfoiasjoaisjdfoiasjdoasjfiasjodjaisdjasdjiasjfoadaspkfoasjdoiasjfoiasjoaisjdfoiasjdoasjfiasjodjaisdjasdjiasjfodaspkfoasjdoiasjfoiasjoaisjdfoiasjdoasjfiasjodjaisdjasdjiasjfosijdsaiodjisadaiosdjasoij</p>
                             </div>
                             <div class="row">
                                 <small>{{ post.address }}</small>
@@ -227,32 +193,114 @@
                                        onclick="toggle_like('{{ post._id }}', 'heart')">
                                 <span class="icon is-small">
                                     {% if post.heart_by_me == true %}
-                                        <i id="{{ post._id }}" class="fa fa-heart" aria-hidden="true"></i>
+                                        <i id="mh_{{ post._id }}" class="fa fa-heart" aria-hidden="true"></i>
                                     {% else %}
-                                        <i id="{{ post._id }}" class="fa fa-heart-o" aria-hidden="true"></i>
+                                        <i id="mh_{{ post._id }}" class="fa fa-heart-o" aria-hidden="true"></i>
                                     {% endif %}
                                 </span>&nbsp;<span
                                             class="like-num {{ post._id }}">{{ post.like_count }}</span>
                                     </a>
                                 </Div>
                                 <div class="col" style="text-align: right">
+
                                     {% if user_info.nickname == post.nickname %}
                                         <img type="button" onclick="del('{{ post._id }}')" src="/static/image/x.svg">
+
                                     {% endif %}
                                 </div>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col-9">
+                                <input type="text" class="comment_{{ post._id }}" placeholder="덧글내용">
+                            </div>
+                            <div class="col-3 text-end">
+                                <button type="button" class="btn btn-warning"
+                                        onclick="comment_insert('{{ post._id }}','{{ user_info.id }}','{{ user_info.nickname }}','{{ user_info.profile_pic_real }}')">
+                                    등록
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6" style="overflow: auto; height: 100%">
+                        <div class="row">
+                            {% for comment in comments %}
+                                {% if post._id == comment.post_id %}
+                                    <div class="row">
+                                        <div class="col-2">
+                                            <img src="/static/{{ comment.profile }}" class="comment_img">
+                                        </div>
+                                        <div class="col-10 text-left p0">
+                                            <label>{{ comment.nickname }}</label>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <label>{{ comment.comment }}</label>
+                                    </div>
+                                    <br>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
 
                     </div>
                 </div>
-            {% endfor %}
-        </div>
-        {#---------------------------------------------------------일반붕어end--------------------------------------------------------------#}
+            </div>
+            {#---------------------------------------------------------모달end--------------------------------------------------------------#}
+            <div class="col" onclick='$("#modal_{{ post._id }}").addClass("is-active")'>
+                <div class="ca">
+                    <div>
+                        <img class="card_image" src="{{ post.img_url }}">
+                    </div>
+                    <div class="card_body">
+                        <div class="row">
+                            <div class="col">
+                                <h4 style="margin: 0">{{ post.title }}</h4>
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col font_13">{{ post.nickname }}</div>
+                            {% if post.like_count > 1 %}
+                                <div class="col" style="text-align: right">
+                                    <img src="/static/image/fire.png" width="15px" style="vertical-align: -3px">
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="row">
+                            <p class="ptag">{{ post.review }}daspkfoasjdoiasjfoiasjoaisjdfoiasjdoasjfiasjodjaisdjasdjiasjfoadaspkfoasjdoiasjfoiasjoaisjdfoiasjdoasjfiasjodjaisdjasdjiasjfodaspkfoasjdoiasjfoiasjoaisjdfoiasjdoasjfiasjodjaisdjasdjiasjfosijdsaiodjisadaiosdjasoij</p>
+                        </div>
+                        <div class="row">
+                            <small>{{ post.address }}</small>
+                        </div>
+                        <div class="row">
+                            <Div class="col" style="text-align: left">
+                                <a class="" aria-label="heart"
+                                   onclick="toggle_like('{{ post._id }}', 'heart')">
+                                <span class="icon is-small">
+                                    {% if post.heart_by_me == true %}
+                                        <i id="{{ post._id }}" class="fa fa-heart" aria-hidden="true"></i>
+                                    {% else %}
+                                        <i id="{{ post._id }}" class="fa fa-heart-o" aria-hidden="true"></i>
+                                    {% endif %}
+                                </span>&nbsp;<span
+                                        class="like-num {{ post._id }}">{{ post.like_count }}</span>
+                                </a>
+                            </Div>
+                            <div class="col" style="text-align: right">
+                                {% if nickname == post.nickname %}
+                                    <img type="button" onclick="del('{{ post._id }}')" src="/static/image/x.svg">
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        {% endfor %}
     </div>
-    {#wrap end#}
+    {#---------------------------------------------------------붕어목록end--------------------------------------------------------------#}
 </div>
-
-
+{#wrap end#}
 </body>
 </html>
 
