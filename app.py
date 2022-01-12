@@ -105,17 +105,24 @@ def addUser():
 
     pw_hash = hashlib.sha256(pw.encode('utf-8')).hexdigest()
 
-    if (id == "" or pw == "" or nickname == ""):
-        return jsonify({'result': 'fail', 'msg': 'please check input'});
-    doc = {
-        'id': id,
-        'pw': pw_hash,
-        'nickname': nickname,
-        "profile_pic": "",  # 프로필 사진 파일 이름
-        "profile_pic_real": "profile_pics/profile_placeholder.png",  # 프로필 사진 기본 이미지
-        "profile_info": ""  # 프로필 한 마디
+    exists = bool(db.user.find_one({"id": id}))
 
-    }
+    if (id == "" or pw == "" or nickname == ""):
+        return jsonify({'result': 'fail', 'exists': exists})
+    if exists == True:
+        return jsonify({'result': 'fail', 'exists': exists})
+    else:
+        doc = {
+            'id': id,
+            'pw': pw_hash,
+            'nickname': nickname,
+            "profile_pic": "",  # 프로필 사진 파일 이름
+            "profile_pic_real": "profile_pics/profile_placeholder.png",  # 프로필 사진 기본 이미지
+            "profile_info": ""  # 프로필 한 마디
+
+        }
+
+
     db.user.insert_one(doc)
     return jsonify({'msg': "입력."});
 
