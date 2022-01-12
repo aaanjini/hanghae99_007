@@ -72,11 +72,6 @@ def user(id):
         status = (id == payload["id"])  # 내 프로필이면 True, 다른 사람 프로필 페이지면 False
 
         user_info = db.user.find_one({"id": id}, {"_id": False})
-        # id_receive = request.args.get("id_give")
-        # if id_receive == "":
-        #     posts = list(db.post.find({}).limit(20))
-        # else:
-        #     posts = list(db.post.find({"id": id_receive}).limit(20))
         for post in posts:
             post["_id"] = str(post["_id"])
             post["like_count"] = db.likes.count_documents({"post_id": post["_id"], "type": "heart"})
@@ -109,17 +104,24 @@ def addUser():
 
     pw_hash = hashlib.sha256(pw.encode('utf-8')).hexdigest()
 
-    if (id == "" or pw == "" or nickname == ""):
-        return jsonify({'result': 'fail', 'msg': 'please check input'});
-    doc = {
-        'id': id,
-        'pw': pw_hash,
-        'nickname': nickname,
-        "profile_pic": "",  # 프로필 사진 파일 이름
-        "profile_pic_real": "profile_pics/profile_placeholder.png",  # 프로필 사진 기본 이미지
-        "profile_info": ""  # 프로필 한 마디
+    exists = bool(db.user.find_one({"id": id}))
 
-    }
+    if (id == "" or pw == "" or nickname == ""):
+        return jsonify({'result': 'fail', 'exists': exists})
+    if exists == True:
+        return jsonify({'result': 'fail', 'exists': exists})
+    else:
+        doc = {
+            'id': id,
+            'pw': pw_hash,
+            'nickname': nickname,
+            "profile_pic": "",  # 프로필 사진 파일 이름
+            "profile_pic_real": "profile_pics/profile_placeholder.png",  # 프로필 사진 기본 이미지
+            "profile_info": ""  # 프로필 한 마디
+
+        }
+
+
     db.user.insert_one(doc)
     return jsonify({'msg': "입력."});
 
@@ -252,6 +254,8 @@ def save_post():
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
         # 게시글 저장하기
         user_info = db.user.find_one({"id": payload["id"]})
+        id_receive = user_info['id']
+        print(id_receive)
         title_receive = request.form['title_give']
         img_url_receive = request.form['img_url_give']
         address_receive = request.form['address_give']
@@ -265,6 +269,7 @@ def save_post():
             "title": title_receive,
             "address": address_receive,
             "review": review_receive,
+            "id": id_receive
         }
         db.post.insert_one(doc)
         return jsonify({'result': 'success', 'msg': f'{user_info["nickname"]}님 게시글 저장!'})
