@@ -2,7 +2,7 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>겨울붕어</title>
+        <title> | 겨울붕어</title>
         <!-- Bootstrap CSS -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
               integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
@@ -29,6 +29,7 @@
         <!-- Font Awesome CSS -->
         <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 
+        <link href="{{ url_for('static', filename='common.css') }}" rel="stylesheet">
         <link href="{{ url_for('static', filename='user.css') }}" rel="stylesheet">
 
         <script>
@@ -101,7 +102,7 @@
             {% if nickname != null %}
                 <div class="row">
                     <div class="col" style="text-align: left">
-                        <span>{{ nickname }}님 환영합니다!</span>
+                        <span>{{ nickname }}님 환영합니다!<i class="far fa-grin-squint"></i></span>
                     </div>
                     <div class="col">
                         <a href="#">게시물 작성</a>
@@ -114,9 +115,97 @@
             {% endif %}
         </div>
         <div class="header">
-            <img src="/static/image/bunga.png" width="300px">
+            <img class="logo" src="/static/image/bunga.png" width="300px">
             <h1>겨울붕어</h1>
         </div>
+        {#     유저 프로필 영역 ------   #}
+        <div class="user_wrap hero mt20">
+            <div class="hero-body" style="padding-bottom:1rem;margin:auto;min-width: 500px">
+                <article class="media">
+                    <figure class="media-left" style="align-self: center">
+                        <a class="image is-96x96" href="#">
+                            <img class="is-rounded profile_img" src="../static/profile_placeholder.png">
+                        </a>
+                    </figure>
+                    <div class="media-content">
+                        <div class="content">
+                            <p>
+                                <strong>{{ nickname }}</strong><small>@ 아이디 들어갈 곳</small>
+                                <br>
+                                자기 소개 들어갈 곳
+                            </p>
+                        </div>
+                    </div>
+                </article>
+{#                {% if status %}#}
+                    <nav id="btns-me" class="level is-mobile" style="margin-top:2rem">
+                        <a class="button level-item has-text-centered is-sparta" aria-label="edit" onclick='$("#modal-edit").addClass("is-active")'>
+                            프로필 수정&nbsp;&nbsp;&nbsp;
+                            <span class="icon is-small">
+                                <i class="fa fa-pencil" aria-hidden="true"></i>
+                            </span>
+                        </a>
+                    </nav>
+                    <div class="modal" id="modal-edit">
+                        <div class="modal-background" onclick='$("#modal-edit").removeClass("is-active")'></div>
+                        <div class="modal-content">
+                            <div class="box">
+                                <article class="media">
+                                    <div class="media-content">
+                                        <div class="field">
+                                            <label class="label" for="input-name">이름</label>
+                                            <p class="control">
+                                                <input id="input-name" class="input" placeholder="홍길동" value="">
+                                            </p>
+                                        </div>
+                                        <div class="field">
+                                            <label class="label" for="input-pic">프로필 사진</label>
+                                            <div class="control is-expanded">
+                                                <div class="file has-name">
+                                                    <label class="file-label" style="width:100%">
+                                                        <input id="input-pic" class="file-input" type="file" name="resume">
+                                                        <span class="file-cta">
+                                                            <span class="file-icon">
+                                                                <i class="fa fa-upload"></i>
+                                                            </span>
+                                                            <span class="file-label">파일 선택</span>
+                                                        </span>
+                                                        <span id="file-name" class="file-name" style="width:100%;max-width:100%"></span>
+                                                    </label>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <div class="field">
+                                            <label class="label" for="textarea-about">나는 누구?</label>
+                                            <p class="control">
+                                                <textarea id="textarea-about" class="textarea" placeholder="자기소개하기"></textarea>
+                                            </p>
+                                        </div>
+                                        <nav class="level is-mobile">
+                                            <div class="level-left">
+
+                                            </div>
+                                            <div class="level-right">
+                                                <div class="level-item">
+                                                    <a class="button is-sparta" onclick="update_profile()">업데이트</a>
+                                                </div>
+                                                <div class="level-item">
+                                                    <a class="button is-sparta is-outlined"
+                                                       onclick='$("#modal-edit").removeClass("is-active")'>취소</a>
+                                                </div>
+                                            </div>
+                                        </nav>
+                                    </div>
+                                </article>
+                            </div>
+                        </div>
+                    <button class="modal-close is-large" aria-label="close" onclick='$("#modal-edit").removeClass("is-active")'></button>
+                </div>
+{#                {% endif %}#}
+            </div>
+        </div>
+        {#    -------유저 프로필 영역 끝   #}
         <div class="orange_back">
             <div class="wrap" style="padding-top: 20px;">
                 <div class="row row-cols-3">
