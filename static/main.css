@@ -28,8 +28,9 @@
 }
 
 .orange_back {
-   background: rgb(242,203,97);
-background: linear-gradient(180deg, rgba(242,203,97,1) 0%, rgba(242,203,97,1) 35%, rgba(242,203,97,0) 100%);}
+    background: rgb(242, 203, 97);
+    background: linear-gradient(180deg, rgba(242, 203, 97, 1) 0%, rgba(242, 203, 97, 1) 80%, rgba(242, 203, 97, 0) 100%);
+}
 
 .card_image {
     width: 100%;
@@ -57,7 +58,7 @@ background: linear-gradient(180deg, rgba(242,203,97,1) 0%, rgba(242,203,97,1) 35
 
     white-space: normal;
     display: -webkit-box;
-    -webkit-line-clamp: 5;
+    -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
@@ -82,15 +83,16 @@ background: linear-gradient(180deg, rgba(242,203,97,1) 0%, rgba(242,203,97,1) 35
     text-align: left;
 }
 
-.titleimage{
-    margin-top : 50px;
+.titleimage {
+    margin-top: 50px;
 }
 
-.titlefont{
+.titlefont {
     font-family: 'East Sea Dokdo', cursive;
     font-size: 50px;
     color: black;
 }
-.subtitle2{
+
+.subtitle2 {
     font-size: 25px;
 }
