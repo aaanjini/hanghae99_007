@@ -50,7 +50,7 @@
                     data: {post_id: id},
                     success: function (response) {
                         alert(response['msg'])
-                        window.location.href = '/login'
+                        window.location.reload()
                     }
                 });
             } else {
@@ -104,7 +104,7 @@
     {% if nickname != null %}
         <div class="row">
             <div class="col" style="text-align: left">
-                <span>{{ nickname }}님 환영합니다!</span>
+                <span><a class="profile_go" href="/user">{{ nickname }}님</a> 환영합니다!</span>
             </div>
             <div class="col">
                 <a href="post">게시물 작성</a>

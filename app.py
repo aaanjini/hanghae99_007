@@ -256,7 +256,7 @@ def save_img():
         name_receive = request.form["name_give"]
         about_receive = request.form["about_give"]
         new_doc = {
-            "profile_name": name_receive,
+            "nickname": name_receive,
             "profile_info": about_receive
         }
         if 'file_give' in request.files:
