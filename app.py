@@ -73,11 +73,6 @@ def user(id):
         status = (id == payload["id"])  # 내 프로필이면 True, 다른 사람 프로필 페이지면 False
 
         user_info = db.user.find_one({"id": id}, {"_id": False})
-        # id_receive = request.args.get("id_give")
-        # if id_receive == "":
-        #     posts = list(db.post.find({}).limit(20))
-        # else:
-        #     posts = list(db.post.find({"id": id_receive}).limit(20))
         for post in posts:
             post["_id"] = str(post["_id"])
             post["like_count"] = db.likes.count_documents({"post_id": post["_id"], "type": "heart"})
