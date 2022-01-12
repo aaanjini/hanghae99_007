@@ -1,61 +1,60 @@
 <!DOCTYPE html>
-
 <html lang="ko">
-
 <head>
-    <meta charset="UTF-8"/>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@4.6.0/dist/lux/bootstrap.min.css"
-          integrity="sha256-n1LAsYCohTi3YOpx8/Jhgf1i6BLuraa4Bnx/qTd4Vs0=" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/rateyo@2.3.5/src/jquery.rateyo.css"
-          integrity="sha256-NGkqAxC1CKM2ILB67FglDNhS5Sd2kKAacTcoWKznSZU=" crossorigin="anonymous">
-<!--    <link rel="stylesheet" href="../resources/css/multiUploadFields.css">-->
+    <!-- Bulma CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"
-            integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js"
-            integrity="sha256-7dA7lq5P94hkBsWdff7qobYkp9ope/L5LQy2t/ljPLo=" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/rateyo@2.3.5/src/jquery.rateyo.js"
-            integrity="sha256-Sq0rSsEMzpXVg0elKKGMr0h0buMHMdRApm944Lh6XoA=" crossorigin="anonymous"></script>
-<!--    <script src="../resources/js/multiUploadFields.js"></script>-->
+    <!-- JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
 
+    <!--  css 파일 분리  -->
+    <link rel="stylesheet" type="text/css" href="../static/common.css">
+    <link rel="stylesheet" type="text/css" href="../static/register.css">
 
-    <!--  ///////////////////////// CSS ////////////////////////// -->
-    <style>
-        body > div.container {
-            border: 3px solid #D6CDB7;
-            margin-top: 10px;
-        }
+    <!-- Webpage Title -->
+    <title>SIGNUP | 겨울붕어</title>
 
-
-        .btn-primary {
-            margin: auto;
-        }
-
-
-    </style>
 
     <!--  ///////////////////////// JavaScript ////////////////////////// -->
     <script type="text/javascript">
 
-
-        $(function () {
+        $(document).ready(function(){
             // 1. $(tagName) : 2.(#id) : 3.$(.className)
-            $("button.btn.btn-primary").on("click", function () {
+            $("button.btn.signup_btn").on("click", function () {
                 AddUser();
             });
-        });
 
-
-        $(function () {
             // 1. $(tagName) : 2.(#id) : 3.$(.className)
-            $("button.btn.btn-warning").on("click", function () {
+            $("button.btn.check_btn").on("click", function () {
                 console.log("good")
-                AddUser();//이걸 유효성검사로
+                check_dup();//이걸 유효성검사로
             });
+
+            {# 아이디값 입력 시 중복확인 버튼 활성화 #}
+            $('#id').on('input',function(){
+               if ($('#id').val()==''){
+                   $('.check_btn').attr("disabled",true);
+                   $('.check_btn').removeClass('on');
+               } else {
+                   $('.check_btn').attr("disabled",false);
+                   $('.check_btn').addClass('on');
+               }
+            });
+
         });
 
 
+        function to_main () {
+            window.location.href = '/'
+        }
 
 
         function AddUser() {
@@ -99,31 +98,32 @@
             let id = $("input[name='id']").val();
             console.log(id)
             if (id == "") {
-                $("#help-id").text("아이디를 입력해주세요.").removeClass("is-safe").addClass("is-danger")
-                $("#input-username").focus()
+                alert(response["msg:아이디를 입력해주세요."]);
+                {#$("#help-id").text("아이디를 입력해주세요.").removeClass("is-safe").addClass("is-danger")#}
+                {#$("#input-username").focus()#}
                 return;
             }
-            if (!is_nickname(username)) {
+            if (!is_nickname(id)) {
                 $("#help-id").text("아이디의 형식을 확인해주세요. 영문과 숫자, 일부 특수문자(._-) 사용 가능. 2-10자 길이").removeClass("is-safe").addClass("is-danger")
                 $("#input-username").focus()
                 return;
             }
-            $("#help-id").addClass("is-loading")//유효성검사
+            {#$("#help-id").addClass("is-loading")//유효성검사#}
             $.ajax({
                 type: "POST",
                 url: "/sign_up/check_dup",
                 data: {
-                    username_give: username
+                    id: id,
+                    exists: response
                 },
                 success: function (response) {
 
                     if (response["exists"]) {
-                        $("#help-id").text("이미 존재하는 아이디입니다.").removeClass("is-safe").addClass("is-danger")
-                        $("#input-username").focus()
+
+                        alert("이미 존재하는 아이디입니다.");
                     } else {
-                        $("#help-id").text("사용할 수 있는 아이디입니다.").removeClass("is-danger").addClass("is-success")
+                        alert("이미 존재하는 아이디입니다.");
                     }
-                    $("#help-id").removeClass("is-loading")
 
                 }
             });
@@ -143,46 +143,31 @@
 
 
 </head>
-
 <body>
+    <div class="register_wrap">
+        <a onclick="to_main()" href="javascript:void(0);"><h1 class="logo"><img src="../static/logo.png" alt="logo"></h1></a>
+        <h3 class="text-center">회원가입</h3>
+        <h6 class="text-center font_15 dark_gray_color mb20">정보를 입력해주세요</h6>
+        <form class="">
+            <div class="register_box point_back_color">
 
-
-<div class="col-lg-10"><!-- 길이지정 -->
-
-
-    <br/><br/>
-    <h1 class="text-center">회원가입</h1>
-
-    <h3 class="text-left">정보를 입력해주세요</h3>
-
-
-    <div class="form-group">
-        <label for="id" class="col-form-label">ID</label>
-        <button class="btn btn-warning" type="submit">아이디 중복 확인</button>
-        <input type="text" class="form-control" placeholder="ID" name="id" id="id">
+                <div class="form-group">
+                    <label for="id" class="white_color font_13">아이디</label>
+                    <div class="form-inline double_input">
+                        <input type="text" class="form-control" placeholder="아이디를 입력하세요." name="id" id="id">
+                        <button class="btn check_btn font_13" type="submit">아이디 중복 확인</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="pw" class="white_color font_13">비밀번호</label>
+                    <input type="password" class="form-control" placeholder="비밀번호를 입력하세요." name="pw" id="pw">
+                </div>
+                <div class="form-group">
+                    <label for="nickname" class="white_color font_13">닉네임</label>
+                    <input type="text" class="form-control" placeholder="닉네임을 입력하세요." name="nickname" id="nickname">
+                </div>
+            </div>
+            <button class="btn signup_btn" type="submit">가입하기</button>
+        </form>
     </div>
-
-
-    <div class="form-group">
-        <label for="pw" class="col-form-label">비밀번호</label>
-
-        <input type="password" class="form-control" placeholder="password" name="pw" id="pw">
-
-    </div>
-
-
-    <div class="form-group">
-        <label for="nickname" class="col-form-label">닉네임</label>
-
-        <input type="text" class="form-control" placeholder="nickname" name="nickname" id="nickname">
-
-    </div>
-
-
-    <button class="btn btn-primary" type="submit">가입하기</button>
-
-
-    </form>
-</div>
-</div>
 </body>

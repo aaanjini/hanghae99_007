@@ -5,9 +5,12 @@ app = Flask(__name__)
 
 from pymongo import MongoClient
 
-client = MongoClient('15.164.226.215', 27017, username="test", password="test")
+client = MongoClient('localhost', 27017)
+#client = MongoClient('15.164.226.215', 27017, username="test", password="test")
 
 db = client.hanghae99_007
+app.config["TEMPLATES_AUTO_RELOAD"] = True
+app.config['UPLOAD_FOLDER'] = "./static/profile_pics"
 
 
 SECRET_KEY = 'SPARTA'
@@ -84,6 +87,9 @@ def addUser():
         'id': id,
         'pw': pw_hash,
         'nickname': nickname,
+        "profile_pic": "", # 프로필 사진 파일 이름
+        "profile_pic_real": "profile_pics/profile_placeholder.png",
+        "profile_info": "" #한마디
 
     }
     db.user.insert_one(doc);
