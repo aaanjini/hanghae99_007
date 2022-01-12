@@ -248,6 +248,8 @@ def save_post():
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
         # 게시글 저장하기
         user_info = db.user.find_one({"id": payload["id"]})
+        id_receive = user_info['id']
+        print(id_receive)
         title_receive = request.form['title_give']
         img_url_receive = request.form['img_url_give']
         address_receive = request.form['address_give']
@@ -261,6 +263,7 @@ def save_post():
             "title": title_receive,
             "address": address_receive,
             "review": review_receive,
+            "id": id_receive
         }
         db.post.insert_one(doc)
         return jsonify({'result': 'success', 'msg': f'{user_info["nickname"]}님 게시글 저장!'})
