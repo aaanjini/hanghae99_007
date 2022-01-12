@@ -51,6 +51,11 @@ def login():
 def register():
     return render_template('register.html')
 
+# 유저페이지 추가
+@app.route('/user')
+def user():
+    return render_template('user.html')
+
 @app.route('/post')
 def post():
     token_receive = request.cookies.get('mytoken')  # 사용자의 토큰을 받아옵니다.
@@ -213,7 +218,7 @@ def save_post():
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for("/"))
 
-
+# 유저페이지---------------------------------
 
 
 if __name__ == '__main__':
