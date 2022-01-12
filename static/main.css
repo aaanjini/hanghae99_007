@@ -1,5 +1,5 @@
 .wrap {
-    width: 1000px;
+    width: 1200px;
     margin: 0 auto;
 }
 
@@ -28,8 +28,8 @@
 }
 
 .orange_back {
-    background-color: #F2CB61
-}
+   background: rgb(242,203,97);
+background: linear-gradient(180deg, rgba(242,203,97,1) 0%, rgba(242,203,97,1) 35%, rgba(242,203,97,0) 100%);}
 
 .card_image {
     width: 100%;
@@ -37,21 +37,22 @@
     object-fit: cover;
 }
 
-.ca{
+.ca {
     background: white;
-    border : 1px solid #BDBDBD;
+    border: 1px solid #BDBDBD;
     margin-bottom: 20px;
 }
 
-.card_body{
-    padding : 10px;
+.card_body {
+    padding: 10px;
 }
-.ptag{
-    border-top : 1px solid #D8D8D8;
-    border-bottom : 1px solid #D8D8D8;
-    padding : 5px 0 5px 0;
-    margin-top:5px;
-    margin-bottom:5px;
+
+.ptag {
+    border-top: 1px solid #D8D8D8;
+    border-bottom: 1px solid #D8D8D8;
+    padding: 5px 0 5px 0;
+    margin-top: 5px;
+    margin-bottom: 5px;
     word-wrap: break-word;
 
     white-space: normal;
@@ -60,10 +61,36 @@
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
-.fa-heart{
-    color:red;
+
+.fa-heart {
+    color: red;
 }
 
-.fa-heart-o{
-    color:red;
+.fa-heart-o {
+    color: red;
+}
+
+.hot_icon {
+    color: white;
+    background: orangered;
+    font-size: 12px;
+    padding: 0 3px 0 3px;
+    border-radius: 5px;
+}
+
+.left {
+    text-align: left;
+}
+
+.titleimage{
+    margin-top : 50px;
+}
+
+.titlefont{
+    font-family: 'East Sea Dokdo', cursive;
+    font-size: 50px;
+    color: black;
+}
+.subtitle2{
+    font-size: 25px;
 }

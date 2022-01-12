@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
           integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link href="{{ url_for('static', filename='main.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='common.css') }}" rel="stylesheet">
 
     <!-- JS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -29,6 +30,10 @@
 
     <!-- Font Awesome CSS -->
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=East+Sea+Dokdo&display=swap" rel="stylesheet">
 
     <script>
         function logout() {
@@ -102,7 +107,7 @@
                 <span>{{ nickname }}님 환영합니다!</span>
             </div>
             <div class="col">
-                <a href="#">게시물 작성</a>
+                <a href="post">게시물 작성</a>
                 <a href="javascript:logout();">로그아웃</a>
             </div>
         </div>
@@ -111,21 +116,79 @@
         <a href="register">회원가입</a>
     {% endif %}
 </div>
-<div class="header">
-    <img src="/static/image/bunga.png" width="300px">
-    <h1>겨울붕어</h1>
+<div class="header orange_back">
+    <img src="/static/image/bunga.png" class="titleimage" width="250px">
+    <h1 class="titlefont">겨울붕어</h1>
 </div>
-<div class="orange_back">
+<div class="">
     <div class="wrap" style="padding-top: 20px;">
+        {#---------------------------------------------------------핫한붕어start--------------------------------------------------------------#}
         <div class="row">
             <div class="col">
-                <span>핫한붕어!</span>
-            </div>
-            <div class="col">
-
+                <img src="/static/image/fire.png" width="20px" style="vertical-align: -2px">
+                <span class="subtitle2">핫한붕어</span>
             </div>
         </div>
-        <div class="row row-cols-3">
+        <div class="row row-cols-4">
+            {% for post in posts %}
+                {% if post.like_count > 1 %}
+                    <div class="col">
+                        <div class="ca">
+                            <div>
+                                <img class="card_image" src="{{ post.img_url }}">
+                            </div>
+                            <div class="card_body">
+                                <div class="row">
+                                    <div class="col">
+                                        <h4 style="margin: 0">{{ post.title }}</h4>
+                                    </div>
+
+                                </div>
+                                <div class="row">
+                                    <div class="col font_13">{{ post.nickname }}</div>
+                                    {% if post.like_count > 1 %}
+                                        <div class="col" style="text-align: right">
+                                            <img src="/static/image/fire.png" width="15px" style="vertical-align: -3px">
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="row">
+                                    <p class="ptag">{{ post.review }}daspkfoasjdoiasjfoiasjoaisjdfoiasjdoasjfiasjodjaisdjasdjiasjfoadaspkfoasjdoiasjfoiasjoaisjdfoiasjdoasjfiasjodjaisdjasdjiasjfodaspkfoasjdoiasjfoiasjoaisjdfoiasjdoasjfiasjodjaisdjasdjiasjfosijdsaiodjisadaiosdjasoij</p>
+                                </div>
+                                <div class="row">
+                                    <small>{{ post.address }}</small>
+                                </div>
+                                <div class="row">
+                                    <Div class="col" style="text-align: left">
+                                        <a class="" aria-label="heart"
+                                           onclick="toggle_like('{{ post._id }}', 'heart')">
+                                <span class="icon is-small">
+                                    {% if post.heart_by_me == true %}
+                                        <i id="{{ post._id }}" class="fa fa-heart" aria-hidden="true"></i>
+                                    {% else %}
+                                        <i id="{{ post._id }}" class="fa fa-heart-o" aria-hidden="true"></i>
+                                    {% endif %}
+                                </span>&nbsp;<span
+                                                class="like-num {{ post._id }}">{{ post.like_count }}</span>
+                                        </a>
+                                    </Div>
+                                    <div class="col" style="text-align: right">
+                                        {% if nickname == post.nickname %}
+                                            <img type="button" onclick="del('{{ post._id }}')"
+                                                 src="/static/image/x.svg">
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+        {#----------------------------------------------------------핫한붕어end---------------------------------------------------------------#}
+        {#---------------------------------------------------------일반붕어start--------------------------------------------------------------#}
+        <div class="row row-cols-4">
             {% for post in posts %}
                 <div class="col">
                     <div class="ca">
@@ -133,10 +196,26 @@
                             <img class="card_image" src="{{ post.img_url }}">
                         </div>
                         <div class="card_body">
-                            <h4 style="margin: 0">{{ post.title }}</h4>
-                            <small>{{ post.nickname }}</small>
-                            <p class="ptag">{{ post.review }}daspkfoasjdoiasjfoiasjoaisjdfoiasjdoasjfiasjodjaisdjasdjiasjfoadaspkfoasjdoiasjfoiasjoaisjdfoiasjdoasjfiasjodjaisdjasdjiasjfodaspkfoasjdoiasjfoiasjoaisjdfoiasjdoasjfiasjodjaisdjasdjiasjfosijdsaiodjisadaiosdjasoij</p>
-                            <small>{{ post.address }}</small>
+                            <div class="row">
+                                <div class="col">
+                                    <h4 style="margin: 0">{{ post.title }}</h4>
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                <div class="col font_13">{{ post.nickname }}</div>
+                                {% if post.like_count > 1 %}
+                                    <div class="col" style="text-align: right">
+                                        <img src="/static/image/fire.png" width="15px" style="vertical-align: -3px">
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="row">
+                                <p class="ptag">{{ post.review }}daspkfoasjdoiasjfoiasjoaisjdfoiasjdoasjfiasjodjaisdjasdjiasjfoadaspkfoasjdoiasjfoiasjoaisjdfoiasjdoasjfiasjodjaisdjasdjiasjfodaspkfoasjdoiasjfoiasjoaisjdfoiasjdoasjfiasjodjaisdjasdjiasjfosijdsaiodjisadaiosdjasoij</p>
+                            </div>
+                            <div class="row">
+                                <small>{{ post.address }}</small>
+                            </div>
                             <div class="row">
                                 <Div class="col" style="text-align: left">
                                     <a class="" aria-label="heart"
@@ -163,6 +242,7 @@
                 </div>
             {% endfor %}
         </div>
+        {#---------------------------------------------------------일반붕어end--------------------------------------------------------------#}
     </div>
     {#wrap end#}
 </div>
