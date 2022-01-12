@@ -7,8 +7,10 @@
     box-shadow: 0px 0px 10px #ccc;
 }
 
-
 .profile_img {
-    height: 100%;
+    height: 100% !important;
     object-fit: cover;
+}
+.profile_go:after {
+    content: '' !important;
 }
