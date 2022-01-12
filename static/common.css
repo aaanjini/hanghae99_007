@@ -46,3 +46,8 @@ input::placeholder {
     margin-bottom: 20px;
 }
 
+/*layout---------------*/
+.orange_back {
+    min-height: 250px;
+}
+
