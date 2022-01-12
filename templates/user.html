@@ -41,8 +41,18 @@
         <meta property="og:image" content="{{ url_for('static', filename='ogimg.png') }}"/>
 
         <script>
+
             function go_home(){
                 window.location.href = '/'
+            }
+            function login(){
+                window.location.href = '/login'
+            }
+            function register(){
+                window.location.href = '/addUser'
+            }
+            function posting(){
+                window.location.href = '/post'
             }
             function logout() {
                 $.removeCookie('mytoken');
@@ -132,23 +142,25 @@
                     }
                 });
             }
+
+
         </script>
     </head>
     <body>
         <div class="navi">
-            {% if nickname != null %}
+            {% if status %}
                 <div class="row">
                     <div class="col" style="text-align: left">
-                        <span><a class="profile_go" href="/user">{{ nickname }}님</a> 환영합니다!</span>
+                        <span><a class="profile_go" href="/user/{{ user_info.id }}">{{ user_info.nickname }}님</a> 환영합니다!</span>
                     </div>
                     <div class="col">
-                        <a href="post">게시물 작성</a>
+                        <a href="javascript:posting();">게시물 작성</a>
                         <a href="javascript:logout();">로그아웃</a>
                     </div>
                 </div>
             {% else %}
-                <a href="login">로그인</a>
-                <a href="register">회원가입</a>
+                <a href="javascript:login();">로그인</a>
+                <a href="javascript:register();">회원가입</a>
             {% endif %}
         </div>
         <div class="header">
@@ -167,14 +179,14 @@
                     <div class="media-content">
                         <div class="content">
                             <p>
-                                <strong>{{ nickname }}</strong> <small>@ {{ user_info.id }}</small>
+                                <strong>{{ user_info.nickname }}</strong> <small>@ {{ user_info.id }}</small>
                                 <br>
                                 {{ user_info.profile_info }}
                             </p>
                         </div>
                     </div>
                 </article>
-
+                {% if status %}
                     <nav id="btns-me" class="level is-mobile" style="margin-top:2rem">
                         <a class="button level-item has-text-centered is-sparta" aria-label="edit" onclick='$("#modal-edit").addClass("is-active")'>
                             프로필 수정&nbsp;&nbsp;&nbsp;
@@ -192,7 +204,7 @@
                                         <div class="field">
                                             <label class="label" for="input-name">이름</label>
                                             <p class="control">
-                                                <input id="input-name" class="input" placeholder="홍길동" value="{{ nickname }}">
+                                                <input id="input-name" class="input" placeholder="홍길동" value="{{ user_info.nickname }}">
                                             </p>
                                         </div>
                                         <div class="field">
@@ -239,14 +251,14 @@
                         </div>
                     <button class="modal-close is-large" aria-label="close" onclick='$("#modal-edit").removeClass("is-active")'></button>
                 </div>
-
+                {% endif %}
             </div>
         </div>
         {#    -------유저 프로필 영역 끝   #}
         <div class="orange_back">
             <div class="wrap" style="padding-top: 50px;">
                 <div class="row row-cols-4">
-{#                    {% if nickname == post.nickname %}#}
+
                         {% for post in posts %}
                             <div class="col">
                                 <div class="ca">
@@ -256,7 +268,7 @@
                                     <div class="card_body">
                                         <h4 style="margin: 0">{{ post.title }}</h4>
                                         <a href="/user/{{ user_info.id }}"><small>{{ post.nickname }}</small></a>
-                                        <p class="ptag">{{ post.review }}daspkfoasjdoiasjfoiasjoaisjdfoiasjdoasjfiasjodjaisdjasdjiasjfoadaspkfoasjdoiasjfoiasjoaisjdfoiasjdoasjfiasjodjaisdjasdjiasjfodaspkfoasjdoiasjfoiasjoaisjdfoiasjdoasjfiasjodjaisdjasdjiasjfosijdsaiodjisadaiosdjasoij</p>
+                                        <p class="ptag">{{ post.review }}</p>
                                         <small>{{ post.address }}</small>
                                         <div class="row">
                                             <div class="col" style="text-align: left">
@@ -272,9 +284,8 @@
                                                 </a>
                                             </div>
                                             <div class="col" style="text-align: right">
-                                                {% if nickname == post.nickname %}
+                                                {% if user_info.nickname == post.nickname %}
                                                     <img type="button" onclick="del('{{ post._id }}')" src="/static/image/x.svg">
-                                                    </button>
                                                 {% endif %}
                                             </div>
                                         </div>
@@ -282,7 +293,7 @@
                                 </div>
                             </div>
                         {% endfor %}
-{#                    {% endif %}#}
+
                 </div>
             </div>
             {#wrap end#}
