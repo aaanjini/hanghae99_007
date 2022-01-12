@@ -60,3 +60,10 @@
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
+.fa-heart{
+    color:red;
+}
+
+.fa-heart-o{
+    color:red;
+}
