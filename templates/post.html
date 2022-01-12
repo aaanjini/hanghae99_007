@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Sparta Vocabulary Notebook</title>
+    <title>겨울붕어</title>
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
@@ -26,6 +26,8 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
             integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
             crossorigin="anonymous"></script>
+    <!-- cookie -->
+    <script src=" https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
     <style>
         * {
             font-family: 'Gamja Flower', cursive;
@@ -69,12 +71,21 @@
         }
     </style>
     <script>
+        function logout() {
+            $.removeCookie('mytoken', {path: '/'});
+            alert('로그아웃!')
+            window.location.href = '/login'
+        };
+
         function save_post() {
             let img_url = $('#post-url').val();
             let title = $('#post-title').val();
             let address = $('#post-address').val();
             let review = $('#post-review').val();
-
+            if( img_url == "" || title == "" || address =="" || review ==""){
+                alert('모두 입력해 주세요!')
+                return;
+            }
             $.ajax({
                 type: "POST",
                 url: `/save_post`,
@@ -86,18 +97,27 @@
                 },
                 success: function (response) {
                     alert(response["msg"])
+                    window.location.href="/"
                 }
             });
         }
+
+
     </script>
 </head>
 <body>
 <div class="wrap">
-    <div class="banner" onclick="window.location.href = '/'">
-        <div class="btns">
-            <button type="button" class="btn btn-outline-secondary">로그인</button>
-            <button type="button" class="btn btn-outline-secondary">회원가입</button>
-        </div>
+    <div class="banner">
+        {% if nickname != null %}
+            <div class="btns">
+                <button type="button" class="btn btn-outline-secondary" onclick="logout()">로그아웃</button>
+            </div>
+        {% else %}
+            <div class="btns">
+                <button type="button" class="btn btn-outline-secondary" onclick="/login">로그인</button>
+                <button type="button" class="btn btn-outline-secondary" onclick="/register">회원가입</button>
+            </div>
+        {% endif %}
     </div>
     <div class="container">
         <h1 style="margin-bottom: 50px; font-size: 40px;color: #495057;">간식붕어 작성하기</h1>
@@ -135,7 +155,7 @@
             <textarea id="post-review" class="form-control" aria-label="With textarea" style="height: 200px;"
                       placeholder="코멘트를 입력해주세요!"></textarea>
         </div>
-        <button type="button" class="btn btn-outline-secondary" onclick="save_post(); window.location.href = '/'"
+        <button type="button" class="btn btn-outline-secondary" onclick="save_post();"
                 style="margin-top: 40px;">작성하기
         </button>
         <button type="button" class="btn btn-outline-secondary" onclick="window.location.href = '/'"

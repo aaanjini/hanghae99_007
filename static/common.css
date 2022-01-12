@@ -9,6 +9,13 @@
     font-family: 'nanumsquare', 'sans-serif';
 }
 
+input[type=password] {
+    font-family: 'sans-serif';
+}
+input[type=password]::placeholder {
+    font-family: 'nanumsquare', 'sans-serif';
+}
+
 /*navi css----------------------*/
 
 .navi  {
@@ -30,13 +37,23 @@
     right: 0;
     top: -5px;
 }
+.header {
+    margin-top: 20px;
 
+}
 .header img {
     width: 170px;
 }
 .header h1 {
     font-family: 'ACCchildrenheartOTF-Regular','sans-serif';
     font-size: 25px;
+}
+.profile_go {
+    padding-right: 0 !important;
+}
+
+.profile_go:after {
+    content: '' !important;
 }
 
 /*--------------------------------------------*/

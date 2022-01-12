@@ -1,5 +1,5 @@
 .wrap {
-    width: 1000px;
+    width: 1200px;
     margin: 0 auto;
 }
 
@@ -28,7 +28,8 @@
 }
 
 .orange_back {
-    background-color: #F2CB61
+    background: rgb(242, 203, 97);
+    background: linear-gradient(180deg, rgba(242, 203, 97, 1) 0%, rgba(242, 203, 97, 1) 80%, rgba(242, 203, 97, 0) 100%);
 }
 
 .card_image {
@@ -37,26 +38,114 @@
     object-fit: cover;
 }
 
-.ca{
+.ca {
     background: white;
-    border : 1px solid #BDBDBD;
+    border: 1px solid #BDBDBD;
     margin-bottom: 20px;
 }
 
-.card_body{
-    padding : 10px;
+.card_body {
+    padding: 10px;
 }
-.ptag{
-    border-top : 1px solid #D8D8D8;
-    border-bottom : 1px solid #D8D8D8;
-    padding : 5px 0 5px 0;
-    margin-top:5px;
-    margin-bottom:5px;
+
+.ptag {
+    border-top: 1px solid #D8D8D8;
+    border-bottom: 1px solid #D8D8D8;
+
+    margin-top: 5px;
+    margin-bottom: 5px;
     word-wrap: break-word;
 
     white-space: normal;
     display: -webkit-box;
-    -webkit-line-clamp: 5;
+    -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
+}
+
+.modal_ptag {
+    border-top: 1px solid #D8D8D8;
+    border-bottom: 1px solid #D8D8D8;
+
+    margin-top: 5px;
+    margin-bottom: 5px;
+
+    word-wrap: break-word;
+}
+
+.fa-heart {
+    color: red;
+}
+
+.fa-heart-o {
+    color: red;
+}
+
+.hot_icon {
+    color: white;
+    background: orangered;
+    font-size: 12px;
+    padding: 0 3px 0 3px;
+    border-radius: 5px;
+}
+
+.left {
+    text-align: left;
+}
+
+.titleimage {
+    margin-top: 50px;
+}
+
+.titlefont {
+    font-family: 'East Sea Dokdo', cursive;
+    font-size: 50px;
+    color: black;
+}
+
+.subtitle2 {
+    font-size: 25px;
+}
+
+.modal_body {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+
+    width: 800px;
+    height: 560px;
+
+    padding: 20px;
+
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 3px 0 rgba(34, 36, 38, 0.15);
+
+    transform: translateX(-50%) translateY(-50%);
+}
+
+.not_scroll {
+    position: fixed;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+}
+
+.comment_input{
+    vertical-align: middle;
+    width: 100%;
+}
+.comment_img{
+    width: 40px;
+    object-fit: cover;
+    border-radius: 50px;
+    padding: 0;
+}
+
+.btn-warning{
+    width: 100%;
+    padding: 3px 12px 3px 12px;
+}
+.p0{
+    padding: 0;
 }
