@@ -53,7 +53,15 @@ def register():
 
 @app.route('/post')
 def post():
-    return render_template('post.html')
+    token_receive = request.cookies.get('mytoken')  # 사용자의 토큰을 받아옵니다.
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        user_info = db.user.find_one({"id": payload['id']})  # 받아온 토큰으로 유저의 정보를 가져옵니다
+        return render_template('post.html', user_info=user_info)
+    except jwt.ExpiredSignatureError:
+        return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
+    except jwt.exceptions.DecodeError:
+        return redirect(url_for("login", msg="로그인 정보가 존재하지 않습니다."))
 
 # 회원가입-------------------------------
 @app.route("/addUser", methods=["POST"])
@@ -180,7 +188,30 @@ def delete_star():
 
 
 # 작성페이지---------------------------------
-
+@app.route('/save_post', methods=['POST'])
+def save_post():
+    token_receive = request.cookies.get('mytoken')
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+    # 게시글 저장하기
+        user_info = db.user.find_one({"id": payload["id"]})
+        title_receive = request.form['title_give']
+        img_url_receive = request.form['img_url_give']
+        address_receive = request.form['address_give']
+        review_receive = request.form['review_give']
+        if (title_receive == "" or img_url_receive == "" or address_receive == "" or review_receive == ""):
+            return jsonify({'result': 'fail', 'msg': '모두 입력하세요'});
+        doc = {
+               "img_url": img_url_receive,
+               "nickname": user_info["nickname"],
+               "title": title_receive,
+               "address": address_receive,
+               "review": review_receive,
+               }
+        db.posts.insert_one(doc)
+        return jsonify({'result': 'success', 'msg': f'{user_info["nickname"]}님 게시글 저장!'})
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for("/"))
 
 
 
