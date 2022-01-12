@@ -6,10 +6,7 @@ app = Flask(__name__)
 
 from pymongo import MongoClient
 
-<<<<<<< HEAD
-#client = MongoClient('localhost', 27017)
-=======
->>>>>>> master
+
 client = MongoClient('15.164.226.215', 27017, username="test", password="test")
 
 db = client.hanghae99_007
@@ -44,7 +41,7 @@ def home():
             post["_id"] = str(post["_id"])
             post["like_count"] = db.likes.count_documents({"post_id": post["_id"], "type": "heart"})
             post["heart_by_me"] = bool(db.likes.find_one({"post_id": post["_id"], "type": "heart", "username": payload['id']}))
-        return render_template('index.html', nickname=user_info["nickname"], posts=posts)
+        return render_template('index.html', user_info=user_info["nickname"], posts=posts)
     except jwt.ExpiredSignatureError:
         return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
     except jwt.exceptions.DecodeError:
