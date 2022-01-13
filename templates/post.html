@@ -98,7 +98,7 @@
         <h1 style="margin-bottom: 50px; font-size: 40px;color: #495057;">간식붕어 작성하기</h1>
         <div class="input-group mb-3">
             <div class="input-group-prepend">
-                <span class="input-group-text" id="inputGroup-sizing-default">닉네임:{{ user_info.nickname }}</span>
+                <span class="input-group-text input-nick" id="inputGroup-sizing-default">닉네임:{{ user_info.nickname }}</span>
             </div>
         </div>
         <div class="input-group mb-3">
@@ -127,8 +127,8 @@
             <div class="input-group-prepend">
                 <span class="input-group-text">코멘트</span>
             </div>
-            <textarea id="post-review" class="form-control" aria-label="With textarea" style="height: 200px;"
-                      placeholder="코멘트를 입력해주세요!(100자 내외)" maxlength="100"></textarea>
+            <textarea id="post-review" class="form-control" aria-label="With textarea" style="height: 150px;resize: none"
+                      placeholder="코멘트를 입력해주세요!(100자 내외)" maxlength="100" ></textarea>
         </div>
         <button type="button" class="btn btn-outline-secondary" onclick="save_post();"
                 style="margin-top: 40px;">작성하기
