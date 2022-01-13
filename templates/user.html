@@ -223,10 +223,10 @@
 </head>
 <body>
 <div class="navi">
-    {% if status %}
+    {% if token_receive %}
         <div class="row">
             <div class="col" style="text-align: left">
-                <span><a class="profile_go" href="/user/{{ user_info.id }}">{{ user_info.nickname }}님</a> 환영합니다!</span>
+                <span><a class="profile_go" href="/user/{{ my_info.id }}">{{ my_info.nickname }}님</a> 환영합니다!</span>
             </div>
             <div class="col">
                 <a href="javascript:posting();">게시물 작성</a>
@@ -431,7 +431,7 @@
                 </div>
                 </div>
                 {#---------------------------------------------------------모달end--------------------------------------------------------------#}
-                {% if post.id == user_info.id %}
+                {% if user_info.id == post.id  %}
                     <div class="col">
                         <div class="ca bunga_card">
                             <div class="bunga_card_img" onclick='$("#modal_{{ post._id }}").addClass("is-active")'>
@@ -448,7 +448,8 @@
                                     <div class="card_profile_img">
                                         <img src="/static/{{ post.profile }}" class="comment_img">
                                     </div>
-                                    <div class="col font_13" style="line-height: 30px;">{{ post.nickname }}</div>
+                                    <div class="col font_13" style="line-height: 30px;"><a
+                                        href="/user/{{ post.id }}">{{ post.nickname }}</a></div>
                                     {% if post.like_count > 1 %}
                                         <div class="col" style="text-align: right">
                                             <img src="/static/image/fire.png" width="15px" style="vertical-align: -7px">
