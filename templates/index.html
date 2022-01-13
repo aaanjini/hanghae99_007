@@ -213,7 +213,7 @@
             <div class="modal" id="modal_{{ post._id }}">
                 <div class="modal-background" onclick='$("#modal_{{ post._id }}").removeClass("is-active")'></div>
                 <div class="row modal_body">
-                    <div class="col-6">
+                    <div class="col-6 modal_card">
                         <div>
                             <img class="card_image" src="{{ post.img_url }}">
                         </div>
@@ -261,9 +261,9 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row modal_submit">
                             <div class="col-9">
-                                <input type="text" class="comment_{{ post._id }}" placeholder="덧글내용">
+                                <input type="text" class="comment_{{ post._id }}" style="width: 100%; height: 100%;" placeholder="덧글내용">
                             </div>
                             <div class="col-3 text-end">
                                 <button type="button" class="btn btn-warning"
@@ -277,22 +277,23 @@
                         <div class="row">
                             {% for comment in comments %}
                                 {% if post._id == comment.post_id %}
-                                    <div class="row">
-                                        <div class="col-2">
-                                            <img src="/static/{{ comment.profile }}" class="comment_img">
+                                    <div class="modal_comment">
+                                        <div class="row">
+                                            <div class="col-2 comment_profile">
+                                                <img src="/static/{{ comment.profile }}" class="comment_img">
+                                            </div>
+                                            <div class="col-10 text-left p0" style="line-height: 40px;">
+                                                <label><a href="/user/{{ comment.id }}">{{ comment.nickname }}</a></label>
+                                            </div>
                                         </div>
-                                        <div class="col-10 text-left p0">
-                                            <label><a href="/user/{{ comment.id }}">{{ comment.nickname }}</a></label>
+                                        <div class="row">
+                                            <label>{{ comment.comment }}</label>
                                         </div>
-                                    </div>
-                                    <div class="row">
-                                        <label>{{ comment.comment }}</label>
                                     </div>
                                     <br>
                                 {% endif %}
                             {% endfor %}
                         </div>
-
                     </div>
                 </div>
             </div>
