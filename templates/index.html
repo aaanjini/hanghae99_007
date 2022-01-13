@@ -172,8 +172,11 @@
                             <div class="row">
                                 <span style="margin: 0; font-size: 30px;">{{ post.title }}</span>
                             </div>
-                            <div class="row">
-                                <div class="col font_13"><a href="/user/{{ post.id }}">{{ post.nickname }}</a></div>
+                            <div class="row card_profile">
+                                <div class="card_profile_img">
+                                    <img src="/static/{{ post.profile }}" class="comment_img">
+                                </div>
+                                <div class="col font_13" style="line-height: 30px;"><a href="/user/{{ post.id }}">{{ post.nickname }}</a></div>
                                 {% if post.like_count > 1 %}
                                     <div class="col" style="text-align: right">
                                         <img src="/static/image/fire.png" width="15px"
@@ -182,7 +185,7 @@
                                 {% endif %}
                             </div>
                             <div class="row">
-                                <p class="modal_ptag" style="overflow: auto; height: 150px;">{{ post.review }}</p>
+                                <p class="modal_ptag" style="overflow: auto; height: 130px;">{{ post.review }}</p>
                             </div>
                             <div class="row">
                                 <small>{{ post.address }}</small>
@@ -229,7 +232,7 @@
                                             <img src="/static/{{ comment.profile }}" class="comment_img">
                                         </div>
                                         <div class="col-10 text-left p0">
-                                            <label>{{ comment.nickname }}</label>
+                                            <label><a href="/user/{{ comment.id }}">{{ comment.nickname }}</a></label>
                                         </div>
                                     </div>
                                     <div class="row">
@@ -255,8 +258,11 @@
                                 <h4 style="margin: 0">{{ post.title }}</h4>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col font_13" style="height: 24px"><a href="/user/{{ post.id }}">{{ post.nickname }}</a></div>
+                        <div class="row card_profile">
+                            <div class="card_profile_img">
+                                <img src="/static/{{ post.profile }}" class="comment_img">
+                            </div>
+                            <div class="col font_13" style="line-height: 30px;"><a href="/user/{{ post.id }}">{{ post.nickname }}</a></div>
                             {% if post.like_count > 1 %}
                                 <div class="col" style="text-align: right">
                                     <img src="/static/image/fire.png" width="15px" style="vertical-align: -3px">
