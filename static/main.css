@@ -3,20 +3,11 @@
     margin: 0 auto;
 }
 
-.header {
-    text-align: center;
-}
 
 .right {
     float: right;
 }
 
-.navi {
-    text-align: right;
-    background-color: #F4F3F3;
-    border-bottom: #E6E6E6 1px solid;
-    height: 30px;
-}
 
 #cards-box {
     display: flex;

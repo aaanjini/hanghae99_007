@@ -16,7 +16,7 @@
           crossorigin="anonymous">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Gamja+Flower&display=swap" rel="stylesheet">
+
     <!--font-awesome 링크 -->
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <!-- Bulma CSS 링크 -->
@@ -33,30 +33,29 @@
             crossorigin="anonymous"></script>
     <!-- cookie -->
     <script src=" https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
-    <style>
-        * {
-            font-family: 'Gamja Flower', cursive;
-        }
 
+    <link href="{{ url_for('static', filename='common.css') }}" rel="stylesheet">
+
+    <style>
         .wrap {
             background-color: #F2CB61;
             min-height: 100vh;
             padding-bottom: 50px;
         }
 
-        .banner {
-            width: 100%;
-            height: 200px;
-
-            background-color: white;
-            background-image: url('{{ url_for("static", filename="겨울붕어2.png") }}');
-
-            background-position: center;
-            background-size: contain;
-            background-repeat: no-repeat;
-
-            cursor: pointer;
-        }
+        {#.banner {#}
+        {#    width: 100%;#}
+        {#    height: 200px;#}
+        {##}
+        {#    background-color: white;#}
+        {#    background-image: url('{{ url_for("static", filename="겨울붕어2.png") }}');#}
+        {##}
+        {#    background-position: center;#}
+        {#    background-size: contain;#}
+        {#    background-repeat: no-repeat;#}
+        {##}
+        {#    cursor: pointer;#}
+        
 
         .btns {
             width: 200px;
@@ -111,63 +110,76 @@
     </script>
 </head>
 <body>
-<div class="wrap">
-    <div class="banner">
-        {% if nickname != null %}
-            <div class="btns">
-                <button type="button" class="btn btn-outline-secondary" onclick="logout()">로그아웃</button>
+    <div class="navi">
+        {% if user_info.nickname != null %}
+            <div class="row">
+                <div class="col" style="text-align: left">
+                    <span><a class="profile_go" href="/user/{{ user_info.id }}">{{ user_info.nickname }}님</a> 환영합니다!</span>
+                </div>
+                <div class="col">
+                    <a href="post">게시물 작성</a>
+                    <a href="javascript:logout();">로그아웃</a>
+                </div>
             </div>
         {% else %}
-            <div class="btns">
-                <button type="button" class="btn btn-outline-secondary" onclick="/login">로그인</button>
-                <button type="button" class="btn btn-outline-secondary" onclick="/register">회원가입</button>
-            </div>
+            <a href="login">로그인</a>
+            <a href="register">회원가입</a>
         {% endif %}
     </div>
-    <div class="container">
-        <h1 style="margin-bottom: 50px; font-size: 40px;color: #495057;">간식붕어 작성하기</h1>
-        <div class="input-group mb-3">
-            <div class="input-group-prepend">
-                <span class="input-group-text" id="inputGroup-sizing-default">닉네임:{{ user_info.nickname }}</span>
-            </div>
-        </div>
-        <div class="input-group mb-3">
-            <div class="input-group-prepend">
-                <span class="input-group-text" id="inputGroup-sizing-default">제목</span>
-            </div>
-            <input id="post-title" type="text" class="form-control" aria-label="Default"
-                   aria-describedby="inputGroup-sizing-default">
-        </div>
-        <div class="input-group mb-3">
-            <div class="input-group-prepend">
-                <span class="input-group-text" id="inputGroup-sizing-default">이미지</span>
-            </div>
-            <input id="post-url" type="text" class="form-control" aria-label="Default"
-                   aria-describedby="inputGroup-sizing-default"
-                   placeholder="이미지url을 넣어주세요!">
-        </div>
-        <div class="input-group mb-3">
-            <div class="input-group-prepend">
-                <span class="input-group-text" id="inputGroup-sizing-default">위치</span>
-            </div>
-            <input id="post-address" type="text" class="form-control" aria-label="Default"
-                   aria-describedby="inputGroup-sizing-default">
-        </div>
-        <div class="input-group">
-            <div class="input-group-prepend">
-                <span class="input-group-text">코멘트</span>
-            </div>
-            <textarea id="post-review" class="form-control" aria-label="With textarea" style="height: 200px;"
-                      placeholder="코멘트를 입력해주세요!"></textarea>
-        </div>
-        <button type="button" class="btn btn-outline-secondary" onclick="save_post();"
-                style="margin-top: 40px;">작성하기
-        </button>
-        <button type="button" class="btn btn-outline-secondary" onclick="window.location.href = '/'"
-                style="margin-top: 40px;">취소
-        </button>
+    <div class="header ">
+        <img src="/static/image/bunga.png" class="titleimage" width="250px">
+        <h1 class="titlefont">겨울붕어</h1>
     </div>
-</div>
+    {#header 끝-----------------------------//#}
+
+    <div class="wrap">
+        <div class="container">
+            <h3 class="text-center">회원가입</h3>
+            <h6 class="text-center font_15 dark_gray_color mb20">정보를 입력해주세요</h6>
+
+
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-sizing-default">닉네임:{{ user_info.nickname }}</span>
+                </div>
+            </div>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-sizing-default">제목</span>
+                </div>
+                <input id="post-title" type="text" class="form-control" aria-label="Default"
+                       aria-describedby="inputGroup-sizing-default">
+            </div>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-sizing-default">이미지</span>
+                </div>
+                <input id="post-url" type="text" class="form-control" aria-label="Default"
+                       aria-describedby="inputGroup-sizing-default"
+                       placeholder="이미지url을 넣어주세요!">
+            </div>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-sizing-default">위치</span>
+                </div>
+                <input id="post-address" type="text" class="form-control" aria-label="Default"
+                       aria-describedby="inputGroup-sizing-default">
+            </div>
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">코멘트</span>
+                </div>
+                <textarea id="post-review" class="form-control" aria-label="With textarea" style="height: 200px;"
+                          placeholder="코멘트를 입력해주세요!"></textarea>
+            </div>
+            <button type="button" class="btn btn-outline-secondary" onclick="save_post();"
+                    style="margin-top: 40px;">작성하기
+            </button>
+            <button type="button" class="btn btn-outline-secondary" onclick="window.location.href = '/'"
+                    style="margin-top: 40px;">취소
+            </button>
+        </div>
+    </div>
 
 </body>
 </html>
