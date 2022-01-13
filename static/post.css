@@ -1,0 +1,43 @@
+* {
+    font-family: 'Gamja Flower', cursive;
+}
+
+.wrap {
+    background-color: #F2CB61;
+    width: 800px;
+    min-height: 500px;
+    padding-bottom: 20px;
+    padding-top: 1px;
+    border-radius: 5px;
+    box-shadow: 5px 5px 30px black;
+}
+
+.container {
+    width: 800px;
+    text-align: center;
+    margin: auto;
+    padding-top: 20px;
+}
+
+.input-group-prepend {
+    text-align: center;
+}
+.input-group-text {
+    font-size: 25px;
+    width: 90px;
+}
+
+.navi {
+    text-align: right;
+    background-color: #F4F3F3;
+    border-bottom: #E6E6E6 1px solid;
+    height: 30px;
+}
+
+.header {
+    text-align: center;
+}
+.input-nick{
+    background-color: #F2CB61;
+    border:  #F2CB61;
+}

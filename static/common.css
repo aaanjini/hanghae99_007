@@ -30,6 +30,9 @@ input[type=password]::placeholder {
     background-color: #fff;
     height: 40px;
     padding: 8px 20px;
+    text-align: right;
+    border-bottom: #E6E6E6 1px solid;
+
 }
 .navi a {
     color: #000;
@@ -47,6 +50,7 @@ input[type=password]::placeholder {
 }
 .header {
     margin-top: 20px;
+    text-align: center;
 
 }
 .header img {
@@ -117,6 +121,8 @@ input::placeholder {
 .p0{
     padding: 0;
 }
+
+
 /*layout---------------*/
 .orange_back {
     min-height: 250px;
