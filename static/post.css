@@ -1,13 +1,14 @@
 * {
-    font-family: 'Gamja Flower', cursive;
+    font-family: 'nanumsquare', 'sans-serif';
 }
 
 .wrap {
     background-color: #F2CB61;
     width: 800px;
     min-height: 500px;
+    margin-top: 20px;
     padding-bottom: 20px;
-    padding-top: 1px;
+    padding-top: 10px;
     border-radius: 5px;
     box-shadow: 5px 5px 30px black;
 }
