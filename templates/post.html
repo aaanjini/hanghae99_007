@@ -22,6 +22,9 @@
     <!-- Bulma CSS 링크 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
 
+    <link href="{{ url_for('static', filename='main.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='common.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='post.css') }}" rel="stylesheet">
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -33,48 +36,7 @@
             crossorigin="anonymous"></script>
     <!-- cookie -->
     <script src=" https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
-    <style>
-        * {
-            font-family: 'Gamja Flower', cursive;
-        }
 
-        .wrap {
-            background-color: #F2CB61;
-            min-height: 100vh;
-            padding-bottom: 50px;
-        }
-
-        .banner {
-            width: 100%;
-            height: 200px;
-
-            background-color: white;
-            background-image: url('{{ url_for("static", filename="겨울붕어2.png") }}');
-
-            background-position: center;
-            background-size: contain;
-            background-repeat: no-repeat;
-
-            cursor: pointer;
-        }
-
-        .btns {
-            width: 200px;
-            text-align: center;
-            float: right;
-        }
-
-        .container {
-            width: 800px;
-            text-align: center;
-            margin: auto;
-            margin-top: 100px;
-        }
-
-        .input-group-text {
-            font-size: 25px;
-        }
-    </style>
     <script>
         function logout() {
             $.removeCookie('mytoken', {path: '/'});
@@ -87,7 +49,7 @@
             let title = $('#post-title').val();
             let address = $('#post-address').val();
             let review = $('#post-review').val();
-            if( img_url == "" || title == "" || address =="" || review ==""){
+            if (img_url == "" || title == "" || address == "" || review == "") {
                 alert('모두 입력해 주세요!')
                 return;
             }
@@ -102,7 +64,7 @@
                 },
                 success: function (response) {
                     alert(response["msg"])
-                    window.location.href="/"
+                    window.location.href = "/"
                 }
             });
         }
@@ -111,19 +73,27 @@
     </script>
 </head>
 <body>
+<div class="navi">
+    {% if user_info.nickname != null %}
+        <div class="row">
+            <div class="col" style="text-align: left">
+                <span><a class="profile_go" href="/user/{{ user_info.id }}">{{ user_info.nickname }}님</a> 환영합니다!</span>
+            </div>
+            <div class="col">
+                <a href="/">메인페이지</a>
+                <a href="javascript:logout();">로그아웃</a>
+            </div>
+        </div>
+    {% else %}
+        <a href="login">로그인</a>
+        <a href="register">회원가입</a>
+    {% endif %}
+</div>
+<div class="header ">
+    <img src="/static/image/bunga.png" class="titleimage" width="250px">
+    <h1 class="titlefont">겨울붕어</h1>
+</div>
 <div class="wrap">
-    <div class="banner">
-        {% if nickname != null %}
-            <div class="btns">
-                <button type="button" class="btn btn-outline-secondary" onclick="logout()">로그아웃</button>
-            </div>
-        {% else %}
-            <div class="btns">
-                <button type="button" class="btn btn-outline-secondary" onclick="/login">로그인</button>
-                <button type="button" class="btn btn-outline-secondary" onclick="/register">회원가입</button>
-            </div>
-        {% endif %}
-    </div>
     <div class="container">
         <h1 style="margin-bottom: 50px; font-size: 40px;color: #495057;">간식붕어 작성하기</h1>
         <div class="input-group mb-3">
@@ -158,7 +128,7 @@
                 <span class="input-group-text">코멘트</span>
             </div>
             <textarea id="post-review" class="form-control" aria-label="With textarea" style="height: 200px;"
-                      placeholder="코멘트를 입력해주세요!"></textarea>
+                      placeholder="코멘트를 입력해주세요!(100자 내외)" maxlength="100"></textarea>
         </div>
         <button type="button" class="btn btn-outline-secondary" onclick="save_post();"
                 style="margin-top: 40px;">작성하기
