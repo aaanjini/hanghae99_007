@@ -73,12 +73,14 @@ def user(id):
         status = (id == payload["id"])  # 내 프로필이면 True, 다른 사람 프로필 페이지면 False
 
         user_info = db.user.find_one({"id": id}, {"_id": False})
+        my_info = db.user.find_one({"id": payload['id']})  # 받아온 토큰으로 유저의 정보를 가져옵니다
+
         for post in posts:
             post["_id"] = str(post["_id"])
             post["like_count"] = db.likes.count_documents({"post_id": post["_id"], "type": "heart"})
             post["heart_by_me"] = bool(
                 db.likes.find_one({"post_id": post["_id"], "type": "heart", "username": payload['id']}))
-        return render_template('user.html', user_info=user_info, posts=posts, status=status, comments=comments)
+        return render_template('user.html', user_info=user_info, posts=posts, status=status, comments=comments , token_receive=token_receive , my_info=my_info)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for("home"))
 
