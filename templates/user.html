@@ -85,21 +85,25 @@
 
         function comment_insert(post_id, id, nickname, profile) {
             let comment = $('.comment_' + post_id).val();
-            $.ajax({
-                type: "POST",
-                url: "/comment_insert",
-                data: {
-                    post_id_give: post_id,
-                    comment_give: comment,
-                    id_give: id,
-                    nickname_give: nickname,
-                    profile_give: profile
-                },
-                success: function (response) {
-                    alert(response['msg'])
-                    window.location.reload();
-                }
-            })
+            if(comment == ''){
+                alert("덧글을 입력해주세요.");
+            } else {
+                $.ajax({
+                    type: "POST",
+                    url: "/comment_insert",
+                    data: {
+                        post_id_give: post_id,
+                        comment_give: comment,
+                        id_give: id,
+                        nickname_give: nickname,
+                        profile_give: profile
+                    },
+                    success: function (response) {
+                        alert(response['msg'])
+                        window.location.reload();
+                    }
+                })
+            }
         }
 
         function toggle_like(post_id, type) {
@@ -341,89 +345,90 @@
                 <div class="modal" id="modal_{{ post._id }}">
                     <div class="modal-background" onclick='$("#modal_{{ post._id }}").removeClass("is-active")'></div>
                     <div class="row modal_body">
-                        <div class="col-6">
-                            <div>
-                                <img class="card_image" src="{{ post.img_url }}">
+                    <div class="col-6 modal_card">
+                        <div>
+                            <img class="card_image" src="{{ post.img_url }}">
+                        </div>
+                        <div class="card_body">
+                            <div class="row">
+                                <span style="margin: 0; font-size: 30px;">{{ post.title }}</span>
                             </div>
-                            <div class="card_body">
-                                <div class="row">
-                                    <span style="margin: 0; font-size: 30px;">{{ post.title }}</span>
+                            <div class="row card_profile">
+                                <div class="card_profile_img">
+                                    <img src="/static/{{ post.profile }}" class="comment_img">
                                 </div>
-                                <div class="row card_profile">
-                                    <div class="card_profile_img">
-                                        <img src="/static/{{ post.profile }}" class="comment_img">
-                                    </div>
-                                    <div class="col font_13" style="line-height: 30px;">{{ post.nickname }}</div>
-                                    {% if post.like_count > 1 %}
-                                        <div class="col" style="text-align: right">
-                                            <img src="/static/image/fire.png" width="15px"
-                                                 style="vertical-align: -3px">
-                                        </div>
-                                    {% endif %}
-                                </div>
-                                <div class="row modal_ptag" style="overflow: auto; height: 120px;">
-                                    <p class="">{{ post.review }}</p>
-                                </div>
-                                <div class="row">
-                                    <small>{{ post.address }}</small>
-                                </div>
-                                <div class="row">
-                                    <Div class="col" style="text-align: left">
-                                        <a class="" aria-label="heart"
-                                           onclick="toggle_like('{{ post._id }}', 'heart')">
-                                        <span class="icon is-small">
-                                            {% if post.heart_by_me == true %}
-                                                <i id="mh_{{ post._id }}" class="fa fa-heart" aria-hidden="true"></i>
-                                            {% else %}
-                                                <i id="mh_{{ post._id }}" class="fa fa-heart-o" aria-hidden="true"></i>
-                                            {% endif %}
-                                        </span>&nbsp;<span
-                                                class="like-num {{ post._id }}">{{ post.like_count }}</span>
-                                        </a>
-                                    </Div>
+                                <div class="col font_13" style="line-height: 30px;"><a
+                                        href="/user/{{ post.id }}">{{ post.nickname }}</a></div>
+                                {% if post.like_count > 1 %}
                                     <div class="col" style="text-align: right">
-                                        {% if user_info.id == post.id %}
-                                            <img type="button" onclick="del('{{ post._id }}')"
-                                                 src="/static/image/x.svg">
-                                        {% endif %}
+                                        <img src="/static/image/fire.png" width="15px"
+                                             style="vertical-align: -3px">
                                     </div>
-                                </div>
+                                {% endif %}
+                            </div>
+                            <div class="row modal_ptag" style="overflow: auto; height: 120px;">
+                                <p class="">{{ post.review }}</p>
                             </div>
                             <div class="row">
-                                <div class="col-9">
-                                    <input type="text" class="comment_{{ post._id }}" placeholder="덧글내용" size="30">
-                                </div>
-                                <div class="col-3 text-end">
-                                    <button type="button" class="btn btn-warning"
-                                            onclick="comment_insert('{{ post._id }}','{{ user_info.id }}','{{ user_info.nickname }}','{{ user_info.profile_pic_real }}')">
-                                        등록
-                                    </button>
+                                <small>{{ post.address }}</small>
+                            </div>
+                            <div class="row">
+                                <Div class="col" style="text-align: left">
+                                    <a class="" aria-label="heart"
+                                       onclick="toggle_like('{{ post._id }}', 'heart')">
+                                <span class="icon is-small">
+                                    {% if post.heart_by_me == true %}
+                                        <i id="mh_{{ post._id }}" class="fa fa-heart" aria-hidden="true"></i>
+                                    {% else %}
+                                        <i id="mh_{{ post._id }}" class="fa fa-heart-o" aria-hidden="true"></i>
+                                    {% endif %}
+                                </span>&nbsp;<span
+                                            class="like-num {{ post._id }}">{{ post.like_count }}</span>
+                                    </a>
+                                </Div>
+                                <div class="col" style="text-align: right">
+                                    {% if user_info.id == post.id %}
+                                        <img type="button" onclick="del('{{ post._id }}')" src="/static/image/x.svg">
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
-                        <div class="col-6" style="overflow: auto; height: 100%">
-                            <div class="row">
-                                {% for comment in comments %}
-                                    {% if post._id == comment.post_id %}
+                        <div class="row modal_submit">
+                            <div class="col-9">
+                                <input type="text" class="comment_{{ post._id }}" style="width: 100%; height: 100%;" placeholder="덧글내용">
+                            </div>
+                            <div class="col-3 text-end">
+                                <button type="button" class="btn btn-warning"
+                                        onclick="comment_insert('{{ post._id }}','{{ user_info.id }}','{{ user_info.nickname }}','{{ user_info.profile_pic_real }}')">
+                                    등록
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6" style="overflow: auto; height: 100%">
+                        <div class="row">
+                            {% for comment in comments %}
+                                {% if post._id == comment.post_id %}
+                                    <div class="modal_comment">
                                         <div class="row">
-                                            <div class="col-2">
+                                            <div class="col-2 comment_profile">
                                                 <img src="/static/{{ comment.profile }}" class="comment_img">
                                             </div>
-                                            <div class="col-10 text-left p0">
-                                                <label><a
-                                                        href="/user/{{ comment.id }}">{{ comment.nickname }}</a></label>
+                                            <div class="col-10 text-left p0" style="line-height: 40px;">
+                                                <label><a href="/user/{{ comment.id }}">{{ comment.nickname }}</a></label>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <label>{{ comment.comment }}</label>
                                         </div>
-                                        <br>
-                                    {% endif %}
-                                {% endfor %}
-                            </div>
-
+                                    </div>
+                                    <br>
+                                {% endif %}
+                            {% endfor %}
                         </div>
+
                     </div>
+                </div>
                 </div>
                 {#---------------------------------------------------------모달end--------------------------------------------------------------#}
                 {% if post.id == user_info.id %}
@@ -453,9 +458,9 @@
                                 <div class="row">
                                     <p class="ptag" style="height: 74px">{{ post.review }}</p>
                                 </div>
-                                <a href="#" class="row" onclick="mapstart('{{ post.address }}','{{ post._id }}')">
+                                <div class="row" onclick="mapstart('{{ post.address }}','{{ post._id }}')">
                                     <small>{{ post.address }}</small>
-                                </a>
+                                </div>
                                 <div class="row">
                                     <Div class="col" style="text-align: left">
                                         <a class="" aria-label="heart"
