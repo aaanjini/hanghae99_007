@@ -79,6 +79,24 @@
 
             }
         }
+        function comment_insert(post_id, id, nickname, profile) {
+            let comment = $('.comment_' + post_id).val();
+            $.ajax({
+                type: "POST",
+                url: "/comment_insert",
+                data: {
+                    post_id_give: post_id,
+                    comment_give: comment,
+                    id_give: id,
+                    nickname_give: nickname,
+                    profile_give: profile
+                },
+                success: function (response) {
+                    alert(response['msg'])
+                    window.location.reload();
+                }
+            })
+        }
 
         function toggle_like(post_id, type) {
             console.log(post_id, type)
@@ -270,9 +288,9 @@
         <div class="wrap" style="padding-top: 50px;">
             <div class="row row-cols-5">
                 {% for post in posts %}
-                    {% if post.id == user_info.id %}
+
                     {#---------------------------------------------------------모달start--------------------------------------------------------------#}
-                        <div class="modal" id="modal_{{ post._id }}">
+                    <div class="modal" id="modal_{{ post._id }}">
                             <div class="modal-background" onclick='$("#modal_{{ post._id }}").removeClass("is-active")'></div>
                             <div class="row modal_body">
                                 <div class="col-6">
@@ -283,8 +301,11 @@
                                         <div class="row">
                                             <span style="margin: 0; font-size: 30px;">{{ post.title }}</span>
                                         </div>
-                                        <div class="row">
-                                            <div class="col font_13">{{ post.nickname }}</div>
+                                        <div class="row card_profile">
+                                            <div class="card_profile_img">
+                                                <img src="/static/{{ post.profile }}" class="comment_img">
+                                            </div>
+                                            <div class="col font_13" style="line-height: 30px;">{{ post.nickname }}</div>
                                             {% if post.like_count > 1 %}
                                                 <div class="col" style="text-align: right">
                                                     <img src="/static/image/fire.png" width="15px"
@@ -293,7 +314,7 @@
                                             {% endif %}
                                         </div>
                                         <div class="row">
-                                            <p class="modal_ptag" style="overflow: auto; height: 150px;">{{ post.review }}</p>
+                                            <p class="modal_ptag" style="overflow: auto; height: 130px;">{{ post.review }}</p>
                                         </div>
                                         <div class="row">
                                             <small>{{ post.address }}</small>
@@ -341,7 +362,7 @@
                                                         <img src="/static/{{ comment.profile }}" class="comment_img">
                                                     </div>
                                                     <div class="col-10 text-left p0">
-                                                        <label>{{ comment.nickname }}</label>
+                                                        <label><a href="/user/{{ comment.id }}">{{ comment.nickname }}</a></label>
                                                     </div>
                                                 </div>
                                                 <div class="row">
@@ -356,6 +377,7 @@
                             </div>
                         </div>
                         {#---------------------------------------------------------모달end--------------------------------------------------------------#}
+                    {% if post.id == user_info.id %}
                         <div class="col">
                             <div class="ca bunga_card">
                                 <div class="bunga_card_img" onclick='$("#modal_{{ post._id }}").addClass("is-active")'>
@@ -368,11 +390,14 @@
                                         </div>
 
                                     </div>
-                                    <div class="row">
-                                        <div class="col font_13" style="height: 74px">{{ post.nickname }}</div>
+                                    <div class="row card_profile">
+                                        <div class="card_profile_img">
+                                            <img src="/static/{{ post.profile }}" class="comment_img">
+                                        </div>
+                                        <div class="col font_13" style="line-height: 30px;">{{ post.nickname }}</div>
                                         {% if post.like_count > 1 %}
                                             <div class="col" style="text-align: right">
-                                                <img src="/static/image/fire.png" width="15px" style="vertical-align: -3px">
+                                                <img src="/static/image/fire.png" width="15px" style="vertical-align: -7px">
                                             </div>
                                         {% endif %}
                                     </div>
