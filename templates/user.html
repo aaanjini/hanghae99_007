@@ -387,7 +387,7 @@
                                     </a>
                                 </Div>
                                 <div class="col" style="text-align: right">
-                                    {% if user_info.id == post.id %}
+                                    {% if my_info.id == post.id %}
                                         <img type="button" onclick="del('{{ post._id }}')" src="/static/image/x.svg">
                                     {% endif %}
                                 </div>
@@ -399,7 +399,7 @@
                             </div>
                             <div class="col-3 text-end">
                                 <button type="button" class="btn btn-warning"
-                                        onclick="comment_insert('{{ post._id }}','{{ user_info.id }}','{{ user_info.nickname }}','{{ user_info.profile_pic_real }}')">
+                                        onclick="comment_insert('{{ post._id }}','{{ my_info.id }}','{{ my_info.nickname }}','{{ my_info.profile_pic_real }}')">
                                     등록
                                 </button>
                             </div>
