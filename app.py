@@ -119,7 +119,6 @@ def addUser():
             "profile_pic": "",  # 프로필 사진 파일 이름
             "profile_pic_real": "profile_pics/profile_placeholder.png",  # 프로필 사진 기본 이미지
             "profile_info": ""  # 프로필 한 마디
-
         }
 
 
