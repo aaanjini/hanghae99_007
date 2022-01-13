@@ -85,21 +85,25 @@
 
         function comment_insert(post_id, id, nickname, profile) {
             let comment = $('.comment_' + post_id).val();
-            $.ajax({
-                type: "POST",
-                url: "/comment_insert",
-                data: {
-                    post_id_give: post_id,
-                    comment_give: comment,
-                    id_give: id,
-                    nickname_give: nickname,
-                    profile_give: profile
-                },
-                success: function (response) {
-                    alert(response['msg'])
-                    window.location.reload();
-                }
-            })
+            if(comment == ''){
+                alert("덧글을 입력해주세요.");
+            } else {
+                $.ajax({
+                    type: "POST",
+                    url: "/comment_insert",
+                    data: {
+                        post_id_give: post_id,
+                        comment_give: comment,
+                        id_give: id,
+                        nickname_give: nickname,
+                        profile_give: profile
+                    },
+                    success: function (response) {
+                        alert(response['msg'])
+                        window.location.reload();
+                    }
+                })
+            }
         }
 
         function toggle_like(post_id, type) {
@@ -362,7 +366,7 @@
                                     </div>
                                 {% endif %}
                             </div>
-                            <div class="row modal_ptag" style="overflow: auto; height: 70px;">
+                            <div class="row modal_ptag" style="overflow: auto; height: 120px;">
                                 <p class="">{{ post.review }}</p>
                             </div>
                             <div class="row">
