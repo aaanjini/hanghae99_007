@@ -114,9 +114,19 @@ input::placeholder {
     margin-bottom: 20px;
 }
 
+.p0{
+    padding: 0;
+}
 /*layout---------------*/
 .orange_back {
     min-height: 250px;
+}
+
+/*button---------------*/
+
+.btn-warning{
+    width: 100%;
+    padding: 3px 12px 3px 12px;
 }
 
 /*card-----------------*/
@@ -158,4 +168,30 @@ input::placeholder {
 .card_profile_img img {
     width: 100%;
     height: 100%;
+}
+
+.modal_card {
+    position: relative;
+}
+
+.modal_submit {
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+}
+
+.modal_comment {
+    border-bottom: 1px solid #eee;
+    margin-bottom: 10px;
+}
+.modal_comment:last-child {
+    border-bottom: none;
+}
+.comment_profile {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    margin-right: 10px;
+    border: 1px solid #eee;
+    border-radius: 50%;
 }
