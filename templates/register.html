@@ -38,7 +38,7 @@
                 check_dup();//이걸 유효성검사로
             });
 
-            {# 아이디값 입력 시 중복확인 버튼 활성화 #}
+
             $('#id').on('input',function(){
                if ($('#id').val()==''){
                    $('.check_btn').attr("disabled",true);
@@ -62,7 +62,7 @@
             let id = $("input[name='id']").val();
             let pw = $("input[name='pw']").val();
             let nickname = $("input[name='nickname']").val();
-            ;
+
             //let photo=$("input[name='profilePhoto']").val();
 
 
@@ -83,38 +83,54 @@
             }
 
 
+
+
             $.ajax({
                 type: "POST",
                 url: "/addUser",
                 data: {id: id, pw: pw, nickname: nickname},
                 success: function (response) {
-                    alert(response["msg:가입완료!"]);
-                    window.location.href = 'http://localhost:5000';
+
+                    if (response["exists"]) {
+                        alert("다른 아이디를 사용해주세요.");
+                    } else {
+                        alert("가입완료!")
+                        window.location.href = 'http://localhost:5000';
+                    }
+
+
                 }
             })
+
+
+
         }
 
         function check_dup() {
             let id = $("input[name='id']").val();
             console.log(id)
+            // if (!is_nickname(username)) {
+            //     $("#help-id").text("아이디의 형식을 확인해주세요. 영문과 숫자, 일부 특수문자(._-) 사용 가능. 2-10자 길이").removeClass("is-safe").addClass("is-danger")
+            //     $("#input-username").focus()
+            //     return;
+            // }
             if (id == "") {
-                alert(response["msg:아이디를 입력해주세요."]);
-                {#$("#help-id").text("아이디를 입력해주세요.").removeClass("is-safe").addClass("is-danger")#}
-                {#$("#input-username").focus()#}
-                return;
+                alert("아이디를 입력해주세요.")
+                return ;
             }
+
             if (!is_nickname(id)) {
-                $("#help-id").text("아이디의 형식을 확인해주세요. 영문과 숫자, 일부 특수문자(._-) 사용 가능. 2-10자 길이").removeClass("is-safe").addClass("is-danger")
-                $("#input-username").focus()
-                return;
-            }
-            {#$("#help-id").addClass("is-loading")//유효성검사#}
+                 //$("#help-id").text("아이디의 형식을 확인해주세요. 영문과 숫자, 일부 특수문자(._-) 사용 가능. 2-10자 길이").removeClass("is-safe").addClass("is-danger")
+                 //$("#input-username").focus()
+                 alert("영문을 반드시 포함하세요 숫자, 일부 특수문자(._-) 사용 가능 및 2-10자 길이의 기준을 맞춰주세요")
+                 return;
+             }
+
             $.ajax({
                 type: "POST",
                 url: "/sign_up/check_dup",
                 data: {
-                    id: id,
-                    exists: response
+                    id: id
                 },
                 success: function (response) {
 
@@ -122,7 +138,7 @@
 
                         alert("이미 존재하는 아이디입니다.");
                     } else {
-                        alert("이미 존재하는 아이디입니다.");
+                        alert("사용하실 수 있는 아이디 입니다..");
                     }
 
                 }
@@ -135,10 +151,10 @@
             return regExp.test(asValue);
         }
 
-        function is_password(asValue) {
-            var regExp = /^(?=.*\d)(?=.*[a-zA-Z])[0-9a-zA-Z!@#$%^&*]{8,20}$/;
-            return regExp.test(asValue);
-        }
+        //function is_password(asValue) {
+        //    var regExp = /^(?=.*\d)(?=.*[a-zA-Z])[0-9a-zA-Z!@#$%^&*]{8,20}$/;
+        //    return regExp.test(asValue);
+       // }
     </script>
 
 
@@ -155,7 +171,7 @@
                     <label for="id" class="white_color font_13">아이디</label>
                     <div class="form-inline double_input">
                         <input type="text" class="form-control" placeholder="아이디를 입력하세요." name="id" id="id">
-                        <button class="btn check_btn font_13" type="submit">아이디 중복 확인</button>
+                        <button class="btn check_btn font_13" type="button">아이디 중복 확인</button>
                     </div>
                 </div>
                 <div class="form-group">
@@ -167,7 +183,7 @@
                     <input type="text" class="form-control" placeholder="닉네임을 입력하세요." name="nickname" id="nickname">
                 </div>
             </div>
-            <button class="btn signup_btn" type="submit">가입하기</button>
+            <button class="btn signup_btn" type="button">가입하기</button>
         </form>
     </div>
 </body>

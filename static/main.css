@@ -29,7 +29,6 @@
 
 .orange_back {
     background: rgb(242, 203, 97);
-    background: linear-gradient(180deg, rgba(242, 203, 97, 1) 0%, rgba(242, 203, 97, 1) 80%, rgba(242, 203, 97, 0) 100%);
 }
 
 .card_image {
