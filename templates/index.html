@@ -153,7 +153,7 @@
 </div>
 <div class="wrap" style="padding-top: 20px;">
     {#---------------------------------------------------------붕어목록start--------------------------------------------------------------#}
-    <div class="row">
+    <div class="row mb20">
         <div class="col">
             <span class="subtitle2">붕어목록</span>
         </div>
@@ -172,8 +172,11 @@
                             <div class="row">
                                 <span style="margin: 0; font-size: 30px;">{{ post.title }}</span>
                             </div>
-                            <div class="row">
-                                <div class="col font_13"><a href="/user/{{ post.id }}">{{ post.nickname }}</a></div>
+                            <div class="row card_profile">
+                                <div class="card_profile_img">
+                                    <img src="/static/{{ post.profile }}" class="comment_img">
+                                </div>
+                                <div class="col font_13" style="line-height: 30px;"><a href="/user/{{ post.id }}">{{ post.nickname }}</a></div>
                                 {% if post.like_count > 1 %}
                                     <div class="col" style="text-align: right">
                                         <img src="/static/image/fire.png" width="15px"
@@ -181,8 +184,8 @@
                                     </div>
                                 {% endif %}
                             </div>
-                            <div class="row">
-                                <p class="modal_ptag" style="overflow: auto; height: 150px;">{{ post.review }}</p>
+                            <div class="row modal_ptag" style="overflow: auto; height: 70px;">
+                                <p class="">{{ post.review }}</p>
                             </div>
                             <div class="row">
                                 <small>{{ post.address }}</small>
@@ -229,7 +232,7 @@
                                             <img src="/static/{{ comment.profile }}" class="comment_img">
                                         </div>
                                         <div class="col-10 text-left p0">
-                                            <label>{{ comment.nickname }}</label>
+                                            <label><a href="/user/{{ comment.id }}">{{ comment.nickname }}</a></label>
                                         </div>
                                     </div>
                                     <div class="row">
@@ -245,26 +248,28 @@
             </div>
             {#---------------------------------------------------------모달end--------------------------------------------------------------#}
             <div class="col">
-                <div class="ca">
-                    <div onclick='$("#modal_{{ post._id }}").addClass("is-active")'>
+                <div class="ca bunga_card">
+                    <div class="bunga_card_img" onclick='$("#modal_{{ post._id }}").addClass("is-active")'>
                         <img class="card_image" src="{{ post.img_url }}">
                     </div>
                     <div class="card_body">
-                        <div class="row" onclick='$("#modal_{{ post._id }}").addClass("is-active")'>
-                            <div class="col">
-                                <h4 style="margin: 0">{{ post.title }}</h4>
-                            </div>
-
-                        </div>
                         <div class="row">
-                            <div class="col font_13" style="height: 24px">{{ post.nickname }}</div>
+                            <div class="col">
+                                <h4 class="ellipsis" style="margin: 0">{{ post.title }}</h4>
+                            </div>
+                        </div>
+                        <div class="row card_profile">
+                            <div class="card_profile_img">
+                                <img src="/static/{{ post.profile }}" class="comment_img">
+                            </div>
+                            <div class="col font_13" style="line-height: 30px;"><a href="/user/{{ post.id }}">{{ post.nickname }}</a></div>
                             {% if post.like_count > 1 %}
                                 <div class="col" style="text-align: right">
                                     <img src="/static/image/fire.png" width="15px" style="vertical-align: -3px">
                                 </div>
                             {% endif %}
                         </div>
-                        <div class="row" onclick='$("#modal_{{ post._id }}").addClass("is-active")'>
+                        <div class="row">
                             <p class="ptag" style="height: 74px">{{ post.review }}</p>
                         </div>
                         <div class="row">

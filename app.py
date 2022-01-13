@@ -66,6 +66,7 @@ def user(id):
 
     # 여러개 찾기 - 예시 ( _id 값은 제외하고 출력)
     posts = list(db.post.find({}))
+    comments = list(db.comment.find({}))
 
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
@@ -77,7 +78,7 @@ def user(id):
             post["like_count"] = db.likes.count_documents({"post_id": post["_id"], "type": "heart"})
             post["heart_by_me"] = bool(
                 db.likes.find_one({"post_id": post["_id"], "type": "heart", "username": payload['id']}))
-        return render_template('user.html', user_info=user_info, posts=posts, status=status)
+        return render_template('user.html', user_info=user_info, posts=posts, status=status, comments=comments)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for("home"))
 
@@ -255,6 +256,7 @@ def save_post():
         # 게시글 저장하기
         user_info = db.user.find_one({"id": payload["id"]})
         id_receive = user_info['id']
+        profile_receive = user_info['profile_pic_real']
         print(id_receive)
         title_receive = request.form['title_give']
         img_url_receive = request.form['img_url_give']
@@ -269,7 +271,8 @@ def save_post():
             "title": title_receive,
             "address": address_receive,
             "review": review_receive,
-            "id": id_receive
+            "id": id_receive,
+            "profile": profile_receive
         }
         db.post.insert_one(doc)
         return jsonify({'result': 'success', 'msg': f'{user_info["nickname"]}님 게시글 저장!'})
