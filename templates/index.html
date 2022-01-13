@@ -48,12 +48,6 @@
 
 
     <script>
-{#
-        $(document).ready(function () {
-            mapstart();
-        });
-#}
-
         function logout() {
             $.removeCookie('mytoken');
             alert('로그아웃!')
@@ -231,7 +225,8 @@
                                 <div class="card_profile_img">
                                     <img src="/static/{{ post.profile }}" class="comment_img">
                                 </div>
-                                <div class="col font_13" style="line-height: 30px;"><a href="/user/{{ post.id }}">{{ post.nickname }}</a></div>
+                                <div class="col font_13" style="line-height: 30px;"><a
+                                        href="/user/{{ post.id }}">{{ post.nickname }}</a></div>
                                 {% if post.like_count > 1 %}
                                     <div class="col" style="text-align: right">
                                         <img src="/static/image/fire.png" width="15px"
@@ -317,7 +312,8 @@
                             <div class="card_profile_img">
                                 <img src="/static/{{ post.profile }}" class="comment_img">
                             </div>
-                            <div class="col font_13" style="line-height: 30px;"><a href="/user/{{ post.id }}">{{ post.nickname }}</a></div>
+                            <div class="col font_13" style="line-height: 30px;"><a
+                                    href="/user/{{ post.id }}">{{ post.nickname }}</a></div>
                             {% if post.like_count > 1 %}
                                 <div class="col" style="text-align: right">
                                     <img src="/static/image/fire.png" width="15px" style="vertical-align: -3px">

@@ -38,6 +38,9 @@
     <link href="{{ url_for('static', filename='common.css') }}" rel="stylesheet">
     <link href="{{ url_for('static', filename='user.css') }}" rel="stylesheet">
 
+    <!-- 카카오 지도 api -->
+    <script type="text/javascript"
+            src="//dapi.kakao.com/v2/maps/sdk.js?appkey=bb9f762eed8b1935d7b746ce947905dd&libraries=services,clusterer,drawing"></script>
 
 
     <script>
@@ -79,6 +82,7 @@
 
             }
         }
+
         function comment_insert(post_id, id, nickname, profile) {
             let comment = $('.comment_' + post_id).val();
             $.ajax({
@@ -166,163 +170,207 @@
             });
         }
 
+        function mapstart(addr, post_id) {
+            $('#map_modal_' + post_id).addClass("is-active");
 
+            var places = new kakao.maps.services.Places();
+            var bounds = new kakao.maps.LatLngBounds();
+
+
+            var container = document.getElementById('map_' + post_id); //지도를 담을 영역의 DOM 레퍼런스
+            var options = { //지도를 생성할 때 필요한 기본 옵션
+                center: new kakao.maps.LatLng(33.450701, 126.570667), //지도의 중심좌표.
+                level: 3 //지도의 레벨(확대, 축소 정도)
+            };
+
+
+            places.keywordSearch(addr, callback);
+
+            function callback(data, status) {
+                if (status === kakao.maps.services.Status.OK) {
+                    displayMarker(data[0])
+                    bounds.extend(new kakao.maps.LatLng(data[0].y, data[0].x));
+
+                    setBounds();
+                }
+
+            }
+
+            function displayMarker(place) {
+                var marker = new kakao.maps.Marker({
+                    map: map,
+                    position: new kakao.maps.LatLng(place.y, place.x),
+                });
+                kakao.maps.event.addListener(marker, 'click', function () {
+                    var position = this.getPosition();
+                    var url = 'https://map.kakao.com/link/map/' + place.id;
+                    window.open(url, '_blank');
+                });
+            }
+
+            function setBounds() {
+                map.setBounds(bounds, 90, 30, 10, 30);
+            }
+
+            var map = new kakao.maps.Map(container, options); //지도 생성 및 객체 리턴
+
+        }
     </script>
 </head>
 <body>
-    <div class="navi">
-        {% if status %}
-            <div class="row">
-                <div class="col" style="text-align: left">
-                    <span><a class="profile_go" href="/user/{{ user_info.id }}">{{ user_info.nickname }}님</a> 환영합니다!</span>
-                </div>
-                <div class="col">
-                    <a href="javascript:posting();">게시물 작성</a>
-                    <a href="javascript:logout();">로그아웃</a>
+<div class="navi">
+    {% if status %}
+        <div class="row">
+            <div class="col" style="text-align: left">
+                <span><a class="profile_go" href="/user/{{ user_info.id }}">{{ user_info.nickname }}님</a> 환영합니다!</span>
+            </div>
+            <div class="col">
+                <a href="javascript:posting();">게시물 작성</a>
+                <a href="javascript:logout();">로그아웃</a>
+            </div>
+        </div>
+    {% else %}
+        <a href="javascript:login();">로그인</a>
+        <a href="javascript:register();">회원가입</a>
+    {% endif %}
+</div>
+<div class="header">
+    <img class="logo" src="/static/image/bunga.png" style="cursor: pointer; margin-top: 50px;" onclick="go_home();">
+    <h1>겨울붕어</h1>
+</div>
+{#     유저 프로필 영역 ------   #}
+<div class="user_wrap hero mt20">
+    <div class="hero-body" style="padding:20px;margin:auto;min-width: 500px">
+        <article class="media">
+            <figure class="media-left" style="align-self: center">
+                <a class="image is-96x96" href="#">
+                    <img class="is-rounded profile_img"
+                         src="{{ url_for('static', filename=user_info.profile_pic_real) }}">
+                </a>
+            </figure>
+            <div class="media-content">
+                <div class="content">
+                    <p>
+                        <strong>{{ user_info.nickname }}</strong> <small>@ {{ user_info.id }}</small>
+                        <br>
+                        {{ user_info.profile_info }}
+                    </p>
                 </div>
             </div>
-        {% else %}
-            <a href="javascript:login();">로그인</a>
-            <a href="javascript:register();">회원가입</a>
-        {% endif %}
-    </div>
-    <div class="header">
-        <img class="logo" src="/static/image/bunga.png" style="cursor: pointer; margin-top: 50px;" onclick="go_home();">
-        <h1>겨울붕어</h1>
-    </div>
-    {#     유저 프로필 영역 ------   #}
-    <div class="user_wrap hero mt20">
-        <div class="hero-body" style="padding:20px;margin:auto;min-width: 500px">
-            <article class="media">
-                <figure class="media-left" style="align-self: center">
-                    <a class="image is-96x96" href="#">
-                        <img class="is-rounded profile_img"
-                             src="{{ url_for('static', filename=user_info.profile_pic_real) }}">
-                    </a>
-                </figure>
-                <div class="media-content">
-                    <div class="content">
-                        <p>
-                            <strong>{{ user_info.nickname }}</strong> <small>@ {{ user_info.id }}</small>
-                            <br>
-                            {{ user_info.profile_info }}
-                        </p>
-                    </div>
-                </div>
-            </article>
-            {% if status %}
-                <nav id="btns-me" class="level is-mobile" style="margin-top:2rem">
-                    <a class="button level-item has-text-centered is-sparta" aria-label="edit"
-                       onclick='$("#modal-edit").addClass("is-active")'>
-                        프로필 수정&nbsp;&nbsp;&nbsp;
-                        <span class="icon is-small">
+        </article>
+        {% if status %}
+            <nav id="btns-me" class="level is-mobile" style="margin-top:2rem">
+                <a class="button level-item has-text-centered is-sparta" aria-label="edit"
+                   onclick='$("#modal-edit").addClass("is-active")'>
+                    프로필 수정&nbsp;&nbsp;&nbsp;
+                    <span class="icon is-small">
                                     <i class="fa fa-pencil" aria-hidden="true"></i>
                                 </span>
-                    </a>
-                </nav>
-                <div class="modal" id="modal-edit">
-                    <div class="modal-background" onclick='$("#modal-edit").removeClass("is-active")'></div>
-                    <div class="modal-content">
-                        <div class="box">
-                            <article class="media">
-                                <div class="media-content">
-                                    <div class="field">
-                                        <label class="label" for="input-name">이름</label>
-                                        <p class="control">
-                                            <input id="input-name" class="input" placeholder="홍길동"
-                                                   value="{{ user_info.nickname }}">
-                                        </p>
-                                    </div>
-                                    <div class="field">
-                                        <label class="label" for="input-pic">프로필 사진</label>
-                                        <div class="control is-expanded">
-                                            <div class="file has-name">
-                                                <label class="file-label" style="width:100%">
-                                                    <input id="input-pic" class="file-input" type="file" name="resume">
-                                                    <span class="file-cta">
+                </a>
+            </nav>
+            <div class="modal" id="modal-edit">
+                <div class="modal-background" onclick='$("#modal-edit").removeClass("is-active")'></div>
+                <div class="modal-content">
+                    <div class="box">
+                        <article class="media">
+                            <div class="media-content">
+                                <div class="field">
+                                    <label class="label" for="input-name">이름</label>
+                                    <p class="control">
+                                        <input id="input-name" class="input" placeholder="홍길동"
+                                               value="{{ user_info.nickname }}">
+                                    </p>
+                                </div>
+                                <div class="field">
+                                    <label class="label" for="input-pic">프로필 사진</label>
+                                    <div class="control is-expanded">
+                                        <div class="file has-name">
+                                            <label class="file-label" style="width:100%">
+                                                <input id="input-pic" class="file-input" type="file" name="resume">
+                                                <span class="file-cta">
                                                                 <span class="file-icon">
                                                                     <i class="fa fa-upload"></i>
                                                                 </span>
                                                                 <span class="file-label">파일 선택</span>
                                                             </span>
-                                                    <span id="file-name" class="file-name"
-                                                          style="width:100%;max-width:100%">{{ user_info.profile_pic }}</span>
-                                                </label>
-                                            </div>
-
+                                                <span id="file-name" class="file-name"
+                                                      style="width:100%;max-width:100%">{{ user_info.profile_pic }}</span>
+                                            </label>
                                         </div>
+
                                     </div>
-                                    <div class="field">
-                                        <label class="label" for="textarea-about">나는 누구?</label>
-                                        <p class="control">
+                                </div>
+                                <div class="field">
+                                    <label class="label" for="textarea-about">나는 누구?</label>
+                                    <p class="control">
                                             <textarea id="textarea-about" class="textarea"
                                                       placeholder="자기소개하기">{{ user_info.profile_info }}</textarea>
-                                        </p>
-                                    </div>
-                                    <nav class="level is-mobile">
-                                        <div class="level-left">
-
-                                        </div>
-                                        <div class="level-right">
-                                            <div class="level-item">
-                                                <a class="button is-sparta" onclick="update_profile()">업데이트</a>
-                                            </div>
-                                            <div class="level-item">
-                                                <a class="button is-sparta is-outlined"
-                                                   onclick='$("#modal-edit").removeClass("is-active")'>취소</a>
-                                            </div>
-                                        </div>
-                                    </nav>
+                                    </p>
                                 </div>
-                            </article>
-                        </div>
-                    </div>
-                    <button class="modal-close is-large" aria-label="close"
-                            onclick='$("#modal-edit").removeClass("is-active")'></button>
-                </div>
-            {% endif %}
-        </div>
-    </div>
-    {#    -------유저 프로필 영역 끝   #}
-    <div class="orange_back">
-        <div class="wrap" style="padding-top: 50px;">
-            <div class="row row-cols-5">
-                {% for post in posts %}
+                                <nav class="level is-mobile">
+                                    <div class="level-left">
 
-                    {#---------------------------------------------------------모달start--------------------------------------------------------------#}
-                    <div class="modal" id="modal_{{ post._id }}">
-                            <div class="modal-background" onclick='$("#modal_{{ post._id }}").removeClass("is-active")'></div>
-                            <div class="row modal_body">
-                                <div class="col-6">
-                                    <div>
-                                        <img class="card_image" src="{{ post.img_url }}">
                                     </div>
-                                    <div class="card_body">
-                                        <div class="row">
-                                            <span style="margin: 0; font-size: 30px;">{{ post.title }}</span>
+                                    <div class="level-right">
+                                        <div class="level-item">
+                                            <a class="button is-sparta" onclick="update_profile()">업데이트</a>
                                         </div>
-                                        <div class="row card_profile">
-                                            <div class="card_profile_img">
-                                                <img src="/static/{{ post.profile }}" class="comment_img">
-                                            </div>
-                                            <div class="col font_13" style="line-height: 30px;">{{ post.nickname }}</div>
-                                            {% if post.like_count > 1 %}
-                                                <div class="col" style="text-align: right">
-                                                    <img src="/static/image/fire.png" width="15px"
-                                                         style="vertical-align: -3px">
-                                                </div>
-                                            {% endif %}
+                                        <div class="level-item">
+                                            <a class="button is-sparta is-outlined"
+                                               onclick='$("#modal-edit").removeClass("is-active")'>취소</a>
                                         </div>
-                                        <div class="row modal_ptag" style="overflow: auto; height: 70px;">
-                                            <p class="">{{ post.review }}</p>
+                                    </div>
+                                </nav>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+                <button class="modal-close is-large" aria-label="close"
+                        onclick='$("#modal-edit").removeClass("is-active")'></button>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{#    -------유저 프로필 영역 끝   #}
+<div class="orange_back">
+    <div class="wrap" style="padding-top: 50px;">
+        <div class="row row-cols-5">
+            {% for post in posts %}
+
+                {#---------------------------------------------------------모달start--------------------------------------------------------------#}
+                <div class="modal" id="modal_{{ post._id }}">
+                    <div class="modal-background" onclick='$("#modal_{{ post._id }}").removeClass("is-active")'></div>
+                    <div class="row modal_body">
+                        <div class="col-6">
+                            <div>
+                                <img class="card_image" src="{{ post.img_url }}">
+                            </div>
+                            <div class="card_body">
+                                <div class="row">
+                                    <span style="margin: 0; font-size: 30px;">{{ post.title }}</span>
+                                </div>
+                                <div class="row card_profile">
+                                    <div class="card_profile_img">
+                                        <img src="/static/{{ post.profile }}" class="comment_img">
+                                    </div>
+                                    <div class="col font_13" style="line-height: 30px;">{{ post.nickname }}</div>
+                                    {% if post.like_count > 1 %}
+                                        <div class="col" style="text-align: right">
+                                            <img src="/static/image/fire.png" width="15px"
+                                                 style="vertical-align: -3px">
                                         </div>
-                                        <div class="row">
-                                            <small>{{ post.address }}</small>
-                                        </div>
-                                        <div class="row">
-                                            <Div class="col" style="text-align: left">
-                                                <a class="" aria-label="heart"
-                                                   onclick="toggle_like('{{ post._id }}', 'heart')">
+                                    {% endif %}
+                                </div>
+                                <div class="row modal_ptag" style="overflow: auto; height: 70px;">
+                                    <p class="">{{ post.review }}</p>
+                                </div>
+                                <div class="row">
+                                    <small>{{ post.address }}</small>
+                                </div>
+                                <div class="row">
+                                    <Div class="col" style="text-align: left">
+                                        <a class="" aria-label="heart"
+                                           onclick="toggle_like('{{ post._id }}', 'heart')">
                                         <span class="icon is-small">
                                             {% if post.heart_by_me == true %}
                                                 <i id="mh_{{ post._id }}" class="fa fa-heart" aria-hidden="true"></i>
@@ -330,87 +378,88 @@
                                                 <i id="mh_{{ post._id }}" class="fa fa-heart-o" aria-hidden="true"></i>
                                             {% endif %}
                                         </span>&nbsp;<span
-                                                        class="like-num {{ post._id }}">{{ post.like_count }}</span>
-                                                </a>
-                                            </Div>
-                                            <div class="col" style="text-align: right">
-                                                {% if user_info.id == post.id %}
-                                                    <img type="button" onclick="del('{{ post._id }}')"
-                                                         src="/static/image/x.svg">
-                                                {% endif %}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-9">
-                                            <input type="text" class="comment_{{ post._id }}" placeholder="덧글내용">
-                                        </div>
-                                        <div class="col-3 text-end">
-                                            <button type="button" class="btn btn-warning"
-                                                    onclick="comment_insert('{{ post._id }}','{{ user_info.id }}','{{ user_info.nickname }}','{{ user_info.profile_pic_real }}')">
-                                                등록
-                                            </button>
-                                        </div>
+                                                class="like-num {{ post._id }}">{{ post.like_count }}</span>
+                                        </a>
+                                    </Div>
+                                    <div class="col" style="text-align: right">
+                                        {% if user_info.id == post.id %}
+                                            <img type="button" onclick="del('{{ post._id }}')"
+                                                 src="/static/image/x.svg">
+                                        {% endif %}
                                     </div>
                                 </div>
-                                <div class="col-6" style="overflow: auto; height: 100%">
-                                    <div class="row">
-                                        {% for comment in comments %}
-                                            {% if post._id == comment.post_id %}
-                                                <div class="row">
-                                                    <div class="col-2">
-                                                        <img src="/static/{{ comment.profile }}" class="comment_img">
-                                                    </div>
-                                                    <div class="col-10 text-left p0">
-                                                        <label><a href="/user/{{ comment.id }}">{{ comment.nickname }}</a></label>
-                                                    </div>
-                                                </div>
-                                                <div class="row">
-                                                    <label>{{ comment.comment }}</label>
-                                                </div>
-                                                <br>
-                                            {% endif %}
-                                        {% endfor %}
-                                    </div>
-
+                            </div>
+                            <div class="row">
+                                <div class="col-9">
+                                    <input type="text" class="comment_{{ post._id }}" placeholder="덧글내용">
+                                </div>
+                                <div class="col-3 text-end">
+                                    <button type="button" class="btn btn-warning"
+                                            onclick="comment_insert('{{ post._id }}','{{ user_info.id }}','{{ user_info.nickname }}','{{ user_info.profile_pic_real }}')">
+                                        등록
+                                    </button>
                                 </div>
                             </div>
                         </div>
-                        {#---------------------------------------------------------모달end--------------------------------------------------------------#}
-                    {% if post.id == user_info.id %}
-                        <div class="col">
-                            <div class="ca bunga_card">
-                                <div class="bunga_card_img" onclick='$("#modal_{{ post._id }}").addClass("is-active")'>
-                                    <img class="card_image" src="{{ post.img_url }}">
-                                </div>
-                                <div class="card_body">
-                                    <div class="row">
-                                        <div class="col">
-                                            <h4 class="ellipsis" style="margin: 0">{{ post.title }}</h4>
-                                        </div>
-
-                                    </div>
-                                    <div class="row card_profile">
-                                        <div class="card_profile_img">
-                                            <img src="/static/{{ post.profile }}" class="comment_img">
-                                        </div>
-                                        <div class="col font_13" style="line-height: 30px;">{{ post.nickname }}</div>
-                                        {% if post.like_count > 1 %}
-                                            <div class="col" style="text-align: right">
-                                                <img src="/static/image/fire.png" width="15px" style="vertical-align: -7px">
+                        <div class="col-6" style="overflow: auto; height: 100%">
+                            <div class="row">
+                                {% for comment in comments %}
+                                    {% if post._id == comment.post_id %}
+                                        <div class="row">
+                                            <div class="col-2">
+                                                <img src="/static/{{ comment.profile }}" class="comment_img">
                                             </div>
-                                        {% endif %}
+                                            <div class="col-10 text-left p0">
+                                                <label><a
+                                                        href="/user/{{ comment.id }}">{{ comment.nickname }}</a></label>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <label>{{ comment.comment }}</label>
+                                        </div>
+                                        <br>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                {#---------------------------------------------------------모달end--------------------------------------------------------------#}
+                {% if post.id == user_info.id %}
+                    <div class="col">
+                        <div class="ca bunga_card">
+                            <div class="bunga_card_img" onclick='$("#modal_{{ post._id }}").addClass("is-active")'>
+                                <img class="card_image" src="{{ post.img_url }}">
+                            </div>
+                            <div class="card_body">
+                                <div class="row">
+                                    <div class="col">
+                                        <h4 class="ellipsis" style="margin: 0">{{ post.title }}</h4>
                                     </div>
-                                    <div class="row">
-                                        <p class="ptag" style="height: 74px">{{ post.review }}</p>
+
+                                </div>
+                                <div class="row card_profile">
+                                    <div class="card_profile_img">
+                                        <img src="/static/{{ post.profile }}" class="comment_img">
                                     </div>
-                                    <div class="row">
-                                        <small>{{ post.address }}</small>
-                                    </div>
-                                    <div class="row">
-                                        <Div class="col" style="text-align: left">
-                                            <a class="" aria-label="heart"
-                                               onclick="toggle_like('{{ post._id }}', 'heart')">
+                                    <div class="col font_13" style="line-height: 30px;">{{ post.nickname }}</div>
+                                    {% if post.like_count > 1 %}
+                                        <div class="col" style="text-align: right">
+                                            <img src="/static/image/fire.png" width="15px" style="vertical-align: -7px">
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="row">
+                                    <p class="ptag" style="height: 74px">{{ post.review }}</p>
+                                </div>
+                                <div class="row" onclick="mapstart('{{ post.address }}','{{ post._id }}')">
+                                    <small>{{ post.address }}</small>
+                                </div>
+                                <div class="row">
+                                    <Div class="col" style="text-align: left">
+                                        <a class="" aria-label="heart"
+                                           onclick="toggle_like('{{ post._id }}', 'heart')">
                                         <span class="icon is-small">
                                             {% if post.heart_by_me == true %}
                                                 <i id="{{ post._id }}" class="fa fa-heart" aria-hidden="true"></i>
@@ -418,24 +467,34 @@
                                                 <i id="{{ post._id }}" class="fa fa-heart-o" aria-hidden="true"></i>
                                             {% endif %}
                                         </span>&nbsp;<span
-                                                    class="like-num {{ post._id }}">{{ post.like_count }}</span>
-                                            </a>
-                                        </Div>
-                                        <div class="col" style="text-align: right">
-                                            {% if user_info.id == post.id %}
-                                                <img type="button" onclick="del('{{ post._id }}')" src="/static/image/x.svg">
-                                            {% endif %}
-                                        </div>
+                                                class="like-num {{ post._id }}">{{ post.like_count }}</span>
+                                        </a>
+                                    </Div>
+                                    <div class="col" style="text-align: right">
+                                        {% if user_info.id == post.id %}
+                                            <img type="button" onclick="del('{{ post._id }}')"
+                                                 src="/static/image/x.svg">
+                                        {% endif %}
                                     </div>
                                 </div>
-
                             </div>
+
                         </div>
-                    {% endif %}
-                {% endfor %}
-            </div>
+                    </div>
+                    {#---------------------------------------------------------지도 모달start--------------------------------------------------------------#}
+                    <div class="modal" id="map_modal_{{ post._id }}">
+                        <div class="modal-background"
+                             onclick='$("#map_modal_{{ post._id }}").removeClass("is-active")'></div>
+                        <div class="row modal_body">
+                            <div id="map_{{ post._id }}" style="height: 100%; width: 100%;"></div>
+                        </div>
+                    </div>
+                    {#---------------------------------------------------------지도 모달end--------------------------------------------------------------#}
+                {% endif %}
+            {% endfor %}
         </div>
-        {#wrap end#}
     </div>
+    {#wrap end#}
+</div>
 </body>
 </html>
