@@ -42,9 +42,18 @@
     <link href="{{ url_for('static', filename='main.css') }}" rel="stylesheet">
     <link href="{{ url_for('static', filename='common.css') }}" rel="stylesheet">
 
+    <!-- 카카오 지도 api -->
+    <script type="text/javascript"
+            src="//dapi.kakao.com/v2/maps/sdk.js?appkey=bb9f762eed8b1935d7b746ce947905dd&libraries=services,clusterer,drawing"></script>
 
 
     <script>
+{#
+        $(document).ready(function () {
+            mapstart();
+        });
+#}
+
         function logout() {
             $.removeCookie('mytoken');
             alert('로그아웃!')
@@ -127,6 +136,52 @@
                 })
 
             }
+        }
+
+        function mapstart(addr, post_id) {
+            $('#map_modal_' + post_id).addClass("is-active");
+
+            var places = new kakao.maps.services.Places();
+            var bounds = new kakao.maps.LatLngBounds();
+
+
+            var container = document.getElementById('map_' + post_id); //지도를 담을 영역의 DOM 레퍼런스
+            var options = { //지도를 생성할 때 필요한 기본 옵션
+                center: new kakao.maps.LatLng(33.450701, 126.570667), //지도의 중심좌표.
+                level: 3 //지도의 레벨(확대, 축소 정도)
+            };
+
+
+            places.keywordSearch(addr, callback);
+
+            function callback(data, status) {
+                if (status === kakao.maps.services.Status.OK) {
+                    displayMarker(data[0])
+                    bounds.extend(new kakao.maps.LatLng(data[0].y, data[0].x));
+
+                    setBounds();
+                }
+
+            }
+
+            function displayMarker(place) {
+                var marker = new kakao.maps.Marker({
+                    map: map,
+                    position: new kakao.maps.LatLng(place.y, place.x),
+                });
+                kakao.maps.event.addListener(marker, 'click', function () {
+                    var position = this.getPosition();
+                    var url = 'https://map.kakao.com/link/map/' + place.id;
+                    window.open(url, '_blank');
+                });
+            }
+
+            function setBounds() {
+                map.setBounds(bounds, 90, 30, 10, 30);
+            }
+
+            var map = new kakao.maps.Map(container, options); //지도 생성 및 객체 리턴
+
         }
     </script>
 </head>
@@ -267,7 +322,7 @@
                         <div class="row" onclick='$("#modal_{{ post._id }}").addClass("is-active")'>
                             <p class="ptag" style="height: 74px">{{ post.review }}</p>
                         </div>
-                        <div class="row">
+                        <div class="row" onclick="mapstart('{{ post.address }}','{{ post._id }}')">
                             <small>{{ post.address }}</small>
                         </div>
                         <div class="row">
@@ -294,10 +349,21 @@
 
                 </div>
             </div>
+
+            {#---------------------------------------------------------지도 모달start--------------------------------------------------------------#}
+            <div class="modal" id="map_modal_{{ post._id }}">
+                <div class="modal-background" onclick='$("#map_modal_{{ post._id }}").removeClass("is-active")'></div>
+                <div class="row modal_body">
+                    <div id="map_{{ post._id }}" style="height: 100%; width: 100%;"></div>
+                </div>
+            </div>
+            {#---------------------------------------------------------지도 모달end--------------------------------------------------------------#}
         {% endfor %}
     </div>
     {#---------------------------------------------------------붕어목록end--------------------------------------------------------------#}
 </div>
 {#wrap end#}
+
+</div>
 </body>
 </html>
