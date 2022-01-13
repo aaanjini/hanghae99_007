@@ -42,7 +42,6 @@ def home():
             post["heart_by_me"] = bool(
                 db.likes.find_one({"post_id": post["_id"], "type": "heart", "username": payload['id']}))
         return render_template('index.html', user_info=user_info, posts=posts, comments=comments)
-
     except jwt.ExpiredSignatureError:
         return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
     except jwt.exceptions.DecodeError:
