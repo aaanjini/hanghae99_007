@@ -35,7 +35,7 @@ input[type=password]::placeholder {
     content: '|';
     color: #000;
     right: 0;
-    top: -5px;
+    top: -3px;
 }
 .header {
     margin-top: 20px;
@@ -119,3 +119,17 @@ input::placeholder {
     height: 85px;
 }
 
+.bunga_card {
+    border-radius: 5px;
+    overflow: hidden;
+    border: 2px solid #D8D8D8;
+    transition:0.2s linear;
+}
+
+.bunga_card:hover {
+    border: 2px solid #FFA500;
+}
+
+.bunga_card_img {
+    cursor: pointer;
+}
