@@ -361,7 +361,7 @@
                                         </div>
                                     {% endif %}
                                 </div>
-                                <div class="row modal_ptag" style="overflow: auto; height: 70px;">
+                                <div class="row modal_ptag" style="overflow: auto; height: 120px;">
                                     <p class="">{{ post.review }}</p>
                                 </div>
                                 <div class="row">
@@ -391,7 +391,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-9">
-                                    <input type="text" class="comment_{{ post._id }}" placeholder="덧글내용">
+                                    <input type="text" class="comment_{{ post._id }}" placeholder="덧글내용" size="30">
                                 </div>
                                 <div class="col-3 text-end">
                                     <button type="button" class="btn btn-warning"
@@ -453,9 +453,9 @@
                                 <div class="row">
                                     <p class="ptag" style="height: 74px">{{ post.review }}</p>
                                 </div>
-                                <div class="row" onclick="mapstart('{{ post.address }}','{{ post._id }}')">
+                                <a href="#" class="row" onclick="mapstart('{{ post.address }}','{{ post._id }}')">
                                     <small>{{ post.address }}</small>
-                                </div>
+                                </a>
                                 <div class="row">
                                     <Div class="col" style="text-align: left">
                                         <a class="" aria-label="heart"
